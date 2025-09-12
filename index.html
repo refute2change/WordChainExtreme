@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Chain Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Word Chain — One letter at a time</h1>
+    <div class="row">
+      <div>
+        <label>Start</label>
+        <input id="startWord" type="text" value="cat" readonly>
+      </div>
+      <div>
+        <label>Target</label>
+        <input id="targetWord" type="text" value="dog" readonly>
+      </div>
+      <button id="reset">Reset</button>
+    </div>
+    <div class="row">
+      <input id="moveInput" type="text" placeholder="Next word">
+      <button id="play">Play</button>
+    </div>
+    <div class="message" id="message"></div>
+    <div>
+      <h3>Letter Inventory</h3>
+      <div id="inventory"></div>
+    </div>
+    <div>
+      <h3>History</h3>
+      <div class="history" id="history"></div>
+    </div>
+  </div>
+
+  <script src="js/scripts.js"></script>
+</body>
+</html>
