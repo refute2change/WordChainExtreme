@@ -58,8 +58,6 @@ function getChangedLetter(a, b) {
 }
 
 function playMove() {
-  let len = parseInt(wordLength.value);
-  let file = "../answers/" + len + "letters.txt";
   const w = inputEl.value.trim().toLowerCase();
   if (!w) return setMsg('Type a word first.');
   if (w.length !== current.length) return setMsg(`Must be ${current.length} letters.`);
@@ -92,7 +90,7 @@ resetBtn.onclick = () => {
 fetch('answers.json')
   .then(res => res.json())
   .then(groups => {
-    const len = lengthSelect.value;       // read current selection
+    const len = wordLength.value;       // read current selection
     const list = groups[len];
     if (!list || list.length < 2) {
       console.warn('Not enough words of length', len);
