@@ -62,7 +62,14 @@ function playMove() {
   if (!w) return setMsg('Type a word first.');
   if (w.length !== current.length) return setMsg(`Must be ${current.length} letters.`);
   
-  if (!wordlist.has(w)) return setMsg('Not in dictionary.');
+  fetch('answers.json')
+  .then(res => res.json())
+  .then(groups => {
+    const len = wordLength.value;       // read current selection
+    const list = groups[len];
+    if (!list.has(w)) return setMsg('Not in dictionary.');
+  })
+  .catch(err => console.error('Error loading answers.json', err));
   if (!oneLetterDiff(current, w)) return setMsg('Must change exactly 1 letter.');
   if (history.includes(w)) return setMsg('Already used.');
 
@@ -87,31 +94,31 @@ playBtn.onclick = playMove;
 inputEl.onkeydown = e => { if (e.key === 'Enter') playMove(); };
 
 resetBtn.onclick = () => {
-fetch('answers.json')
-  .then(res => res.json())
-  .then(groups => {
-    const len = wordLength.value;       // read current selection
-    const list = groups[len];
-    if (!list || list.length < 2) {
-      console.warn('Not enough words of length', len);
-      return;
-    }
+  fetch('answers.json')
+    .then(res => res.json())
+    .then(groups => {
+        const len = wordLength.value;       // read current selection
+        const list = groups[len];
+        if (!list || list.length < 2) {
+        console.warn('Not enough words of length', len);
+        return;
+        }
 
-    const i1 = Math.floor(Math.random() * list.length);
-    let i2;
-    do {
-      i2 = Math.floor(Math.random() * list.length);
-    } while (i2 === i1);
+        const i1 = Math.floor(Math.random() * list.length);
+        let i2;
+        do {
+        i2 = Math.floor(Math.random() * list.length);
+        } while (i2 === i1);
 
-    const word1 = list[i1];
-    const word2 = list[i2];
+        const word1 = list[i1];
+        const word2 = list[i2];
 
-    startEl.value = word1;
-    targetEl.value = word2;
+        startEl.value = word1;
+        targetEl.value = word2;
 
-    console.log(`Chosen ${len}-letter words:`, word1, word2);
-  })
-  .catch(err => console.error('Error loading answers.json', err));
+        console.log(`Chosen ${len}-letter words:`, word1, word2);
+    })
+    .catch(err => console.error('Error loading answers.json', err));
   current = startEl.value;
   history = [current];
 
