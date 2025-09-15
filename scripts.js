@@ -22,6 +22,7 @@ for (let i = 65; i <= 90; i++) { // A-Z
 }
 
 let oneLetterDiffer;
+let readWordsfromFile;
 
 // Ensure Module is defined or imported before using it
 if (typeof Module === 'function') {
