@@ -118,18 +118,19 @@ resetBtn.onclick = () => {
         targetEl.value = word2;
 
         console.log(`Chosen ${len}-letter words:`, word1, word2);
+        current = word1;
+        history = [];
+        history.push(word1);
+
+        inventory = {};
+        for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
+
+        renderHistory();
+        renderInventory();
+        setMsg('');
     })
     .catch(err => console.error('Error loading answers.json', err));
-  current = word1;
-  history = [];
-  history.push(word1);
 
-  inventory = {};
-  for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
-
-  renderHistory();
-  renderInventory();
-  setMsg('');
 };
 
 renderHistory();
