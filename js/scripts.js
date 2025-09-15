@@ -21,6 +21,19 @@ for (let i = 65; i <= 90; i++) { // A-Z
     inventory[String.fromCharCode(i)] = 1000;
 }
 
+let oneLetterDiffer;
+
+// Ensure Module is defined or imported before using it
+if (typeof Module === 'function') {
+    Module().then((Module) => {
+        oneLetterDiffer = Module.oneLetterDiffer;
+    });
+} else {
+    // Fallback: use the JS implementation if WASM is not available
+    oneLetterDiffer = oneLetterDiff;
+}
+
+
 function renderHistory() {
     historyEl.innerHTML = '';
     history.forEach(w => {
@@ -42,6 +55,7 @@ function renderInventory() {
 }
 
 function oneLetterDiff(a,b){
+    console.log('Using JS oneLetterDiff');
     if (a.length !== b.length) return false;
     let diff=0;
     for (let i=0;i<a.length;i++) if(a[i]!==b[i]) diff++;
@@ -58,7 +72,8 @@ function playMove(){
     if (!w) return setMsg('Type a word first.');
     if (w.length !== current.length) return setMsg('Must be '+current.length+' letters.');
     if (!wordlist.has(w)) return setMsg('Not in dictionary.');
-    if (!oneLetterDiff(current,w)) return setMsg('Must change exactly 1 letter.');
+    if (!oneLetterDiffer) return setMsg('WASM not loaded yet.');
+    if (!oneLetterDiffer(current,w)) return setMsg('Must change exactly 1 letter.');
     if (history.includes(w)) return setMsg('Already used.');
 
     const cost = getChangedLetter(current,w);
