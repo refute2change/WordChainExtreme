@@ -62,7 +62,7 @@ function playMove() {
   if (!w) return setMsg('Type a word first.');
   if (w.length !== current.length) return setMsg(`Must be ${current.length} letters.`);
   
-  fetch('answers.json')
+  fetch('legalanswers.json')
   .then(res => res.json())
   .then(groups => {
     const len = wordLength.value;       // read current selection
