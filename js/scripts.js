@@ -62,15 +62,16 @@ function playMove() {
   const w = inputEl.value.trim().toLowerCase();
   if (!w) return setMsg('Type a word first.');
   if (w.length !== current.length) return setMsg(`Must be ${current.length} letters.`);
-  
+  let done = false;
   fetch('legalanswers.json')
   .then(res => res.json())
   .then(groups => {
     const len = wordLength.value;       // read current selection
     const list = new Set(groups[len]);
-    if (!list.has(w)) return setMsg('Not in dictionary.');
+    if (!list.has(w)) done = true;
   })
   .catch(err => console.error('Error loading answers.json', err));
+  if (done) return setMsg('Not in dictionary.');
   if (!oneLetterDiff(current, w)) return setMsg('Must change exactly 1 letter.');
   if (history.includes(w)) return setMsg('Already used.');
 
