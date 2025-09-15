@@ -68,7 +68,8 @@ function playMove() {
   .then(groups => {
     const len = wordLength.value;       // read current selection
     const list = new Set(groups[len]);
-    if (!list.has(w)) done = true;
+    done = !list.has(w);
+    console.log(done);
   })
   .catch(err => console.error('Error loading answers.json', err));
   if (done) return setMsg('Not in dictionary.');
