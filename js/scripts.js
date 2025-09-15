@@ -27,6 +27,7 @@ let oneLetterDiffer;
 if (typeof Module === 'function') {
     Module().then((Module) => {
         oneLetterDiffer = Module.oneLetterDiffer;
+        console.log("WASM ready");
     });
 } else {
     // Fallback: use the JS implementation if WASM is not available
