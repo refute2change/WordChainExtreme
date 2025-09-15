@@ -11,6 +11,17 @@
   <div class="container">
     <h1>Word Chain — One letter at a time</h1>
     <div class="row">
+      <label for="wordLength">Word Length:</label>
+      <select id="wordLength">
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+    </div>
+    <div class="row">
       <div>
         <label>Start</label>
         <input id="startWord" type="text" value="cat" readonly>
@@ -35,7 +46,7 @@
       <div class="history" id="history"></div>
     </div>
   </div>
-  <script src="wordHandling.js"></script>
-  <script src="scripts.js"></script>
+  <!-- <script src="wordHandling.js"></script> -->
+  <script src="js/scripts.js"></script>
 </body>
 </html>
