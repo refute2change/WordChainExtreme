@@ -24,6 +24,7 @@ let inventory = {};
 for (let i = 65; i <= 90; i++) {
   inventory[String.fromCharCode(i)] = 1000;
 }
+let word1, word2;
 
 function renderHistory() {
   historyEl.innerHTML = '';
@@ -110,8 +111,8 @@ resetBtn.onclick = () => {
         i2 = Math.floor(Math.random() * list.length);
         } while (i2 === i1);
 
-        const word1 = list[i1];
-        const word2 = list[i2];
+        word1 = list[i1];
+        word2 = list[i2];
 
         startEl.value = word1;
         targetEl.value = word2;
@@ -119,8 +120,9 @@ resetBtn.onclick = () => {
         console.log(`Chosen ${len}-letter words:`, word1, word2);
     })
     .catch(err => console.error('Error loading answers.json', err));
-  current = startEl.value;
-  history = [current];
+  current = word1;
+  history = [];
+  history.push(word1);
 
   inventory = {};
   for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
