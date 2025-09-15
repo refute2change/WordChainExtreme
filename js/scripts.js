@@ -27,6 +27,7 @@ let oneLetterDiffer;
 if (typeof Module === 'function') {
     Module().then((Module) => {
         oneLetterDiffer = Module.oneLetterDiffer;
+        readWordsfromFile = Module.readWordsFromFile;
         console.log("WASM ready");
     });
 } else {
@@ -95,6 +96,7 @@ function setMsg(t){ msgEl.textContent = t; }
 playBtn.onclick = playMove;
 inputEl.onkeydown = e => { if (e.key==='Enter') playMove(); };
 resetBtn.onclick = () => {
+    readWordsFromFile();
     const words = builtin.slice();
     const startIdx = Math.floor(Math.random() * words.length);
     let endIdx;
