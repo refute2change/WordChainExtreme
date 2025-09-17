@@ -208,6 +208,7 @@ function chooseWords() {
         renderHistory();
         renderInventory();
         setMsg('');
+        updateAllBoxes();
     })
     .catch(err => console.error('Error loading answers.json', err));
 }
