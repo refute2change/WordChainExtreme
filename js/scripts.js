@@ -1,11 +1,3 @@
-const builtin = [
-  "cat","cot","cog","dog","dot","dat","bat","bag","bog","log","lag","tag","tan",
-  "man","men","pen","pan","can","cap","map","mad","sad","sap","sip","sit",
-  "fit","fat","fog","hug","hum","ham","him","rim","ram","ran","run","sun","son"
-];
-
-const wordlist = new Set(builtin);
-
 // DOM elements
 const startEl = document.getElementById('startWord');
 const targetEl = document.getElementById('targetWord');
