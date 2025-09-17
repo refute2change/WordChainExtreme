@@ -14,6 +14,10 @@ const resetBtn = document.getElementById('reset');
 const playBtn = document.getElementById('play');
 const invEl = document.getElementById('inventory');
 const wordLength = document.getElementById('wordLength');
+const moveBoxes = document.getElementById('moveBoxes');
+const startBoxes = document.getElementById('startBoxes');
+const targetBoxes = document.getElementById('targetBoxes');
+
 let historyString = '↪';
 
 // game state
@@ -138,6 +142,31 @@ function setMsg(t) { msgEl.textContent = t; }
 
 playBtn.onclick = playMove;
 inputEl.onkeydown = e => { if (e.key === 'Enter') playMove(); };
+
+function renderWordBoxes(container, word, totalLength) {
+  container.innerHTML = '';
+  for (let i = 0; i < totalLength; i++) {
+    const box = document.createElement('div');
+    box.className = 'letter-box';
+    box.textContent = word[i] ? word[i].toUpperCase() : '';
+    container.appendChild(box);
+  }
+}
+
+function updateAllBoxes() {
+  const len = parseInt(wordLength.value, 10);
+  renderWordBoxes(startBoxes, startEl.value, len);
+  renderWordBoxes(targetBoxes, targetEl.value, len);
+  renderWordBoxes(moveBoxes, inputEl.value, len);
+}
+
+// Update whenever something changes
+inputEl.addEventListener('input', updateAllBoxes);
+startEl.addEventListener('input', updateAllBoxes);
+targetEl.addEventListener('input', updateAllBoxes);
+
+// Initial render
+updateAllBoxes();
 
 function chooseWords() {
   fetch('answerscompartments.json')
