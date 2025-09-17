@@ -122,35 +122,51 @@ button:disabled { background: #94a3b8; color: #fff; }
   justify-content: center;
   width: 40px;
   height: 50px;
-  background: #333;
-  color: #fff;
+  background: #007eb9;      /* bright yellow when enabled */
+  color: #222;               /* dark text for contrast */
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
-}
-
-.inv-btn:disabled {
-  opacity: 0.3;
-  cursor: default;
+  transition: background 0.2s, transform 0.1s;
 }
 
 .inv-btn:hover:not(:disabled) {
-  background: #555;
+  background: #1f96cd;       /* even brighter on hover */
+  transform: translateY(-2px);
+}
+
+.inv-btn:disabled {
+  background: #444;           /* dark gray when disabled */
+  color: #999;                 /* faded text */
+  cursor: default;
+  opacity: 0.5;
 }
 
 .inv-btn .letter {
-  font-size: 25px;
+  font-size: 20px;
   font-family: 'Itim', cursive;
   font-weight: bold;
-  color: #ffeb3b; /* bright yellow */
 }
 
 .inv-btn .count {
   font-size: 12px;
-  color: #aaa; /* dim gray */
+  color: #ccc;                /* slightly dimmer count */
 }
 
-.backspace-btn .letter {
-  color: #ff6666; /* red backspace */
+.backspace-btn {
+  background: #ff8a80;         /* red backspace */
+  color: #888;
+}
+
+.backspace-btn:hover {
+  background: #ff5252;
+}
+
+/* 📱 Mobile: make keys bigger */
+@media (max-width: 768px) {
+  .inv-btn {
+    width: 30px;
+    height: 45px;
+    font-size: 18px;
+  }
 }
