@@ -99,12 +99,17 @@ function setMsg(t) { msgEl.textContent = t; }
 playBtn.onclick = playMove;
 inputEl.onkeydown = e => { if (e.key === 'Enter') playMove(); };
 
-resetBtn.onclick = () => {
-  fetch('answers.json')
+function chooseWords() {
+  fetch('answerscompartments.json')
     .then(res => res.json())
     .then(groups => {
-        const len = wordLength.value;       // read current selection
-        const list = groups[len];
+        const len = wordLength.value;
+        const templist = groups[len];       // read current selection
+        let index;
+        do {
+          index = Math.floor(Math.random() * templist.length);
+        } while (list[index].length > 2);
+        const list = templist[index];
         if (!list || list.length < 2) {
         console.warn('Not enough words of length', len);
         return;
@@ -135,8 +140,14 @@ resetBtn.onclick = () => {
         setMsg('');
     })
     .catch(err => console.error('Error loading answers.json', err));
+}
 
+resetBtn.onclick = () => {
+  chooseWords();
+  inputEl.value = '';
+  setMsg('');
 };
 
+chooseWords();
 renderHistory();
 renderInventory();
