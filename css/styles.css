@@ -58,12 +58,27 @@ button:disabled { background: #94a3b8; color: #fff; }
 }
 .history {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   gap: 10px;
-  margin-top: 10px;
-  color: #fff;
-  
+
+  max-width: 100%;        /* keep it inside your layout */
+  overflow-x: auto;       /* horizontal scroll */
+  overflow-y: hidden;
+  padding: 6px;
+  border: 2px solid #444;
+  border-radius: 6px;
+  background: #f9f9f9;
+  white-space: nowrap;    /* keep items from wrapping */
 }
+
+#history::-webkit-scrollbar {
+  height: 6px;
+}
+#history::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 3px;
+}
+
 .word-item {
   display: flex;
   align-items: center;
