@@ -1,3 +1,9 @@
+const keyboardRows = [
+  ['Q','W','E','R','T','Y','U','I','O','P'],
+  ['A','S','D','F','G','H','J','K','L'],
+  ['Z','X','C','V','B','N','M']
+];
+
 // DOM elements
 const startEl = document.getElementById('startWord');
 const targetEl = document.getElementById('targetWord');
@@ -30,12 +36,46 @@ function renderHistory() {
 
 function renderInventory() {
   invEl.innerHTML = '';
-  for (const [ltr, count] of Object.entries(inventory)) {
-    const d = document.createElement('div');
-    d.className = 'inv-item';
-    d.textContent = `${ltr}: ${count}`;
-    invEl.appendChild(d);
+
+  for (const row of keyboardRows) {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'inv-row';
+
+    for (const letter of row) {
+      const count = inventory[letter] ?? 0;
+
+      const btn = document.createElement('button');
+      btn.className = 'inv-btn';
+      btn.disabled = count <= 0;
+
+      btn.innerHTML = `
+        <div class="letter">${letter}</div>
+        <div class="count">${count}</div>
+      `;
+
+      btn.onclick = () => {
+        moveInput.value += letter.toLowerCase();
+        renderInventory();
+      };
+
+      rowDiv.appendChild(btn);
+    }
+
+    invEl.appendChild(rowDiv);
   }
+
+  // Backspace key at the end of last row
+  const back = document.createElement('button');
+  back.className = 'inv-btn backspace-btn';
+  back.innerHTML = `
+    <div class="letter">←</div>
+    <div class="count">del</div>
+  `;
+  back.onclick = () => {
+    moveInput.value = moveInput.value.slice(0, -1);
+  };
+
+  invEl.lastElementChild.appendChild(back);
 }
 
 function oneLetterDiff(a, b) {
