@@ -133,6 +133,7 @@ async function playMove() {
 
   renderHistory();
   renderInventory();
+  updateAllBoxes();
   inputEl.value = '';
 
   setMsg(w === targetEl.value ? '🎉 Reached target!' : '');
