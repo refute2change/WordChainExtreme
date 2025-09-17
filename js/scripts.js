@@ -14,6 +14,7 @@ const resetBtn = document.getElementById('reset');
 const playBtn = document.getElementById('play');
 const invEl = document.getElementById('inventory');
 const wordLength = document.getElementById('wordLength');
+let historyString = '↪';
 
 // game state
 let current = startEl.value;
@@ -25,12 +26,14 @@ for (let i = 65; i <= 90; i++) {
 let word1, word2;
 
 function renderHistory() {
+  let i = 0;
   historyEl.innerHTML = '';
   history.forEach(w => {
     const div = document.createElement('div');
     div.className = 'word-item';
-    div.innerHTML = `<div class="letter-box">${w[0]}</div><div>${w}</div>`;
+    div.innerHTML = `<div class="letter-box">${historyString[i]}</div><div>${w}</div>`;
     historyEl.appendChild(div);
+    i++;
   });
 }
 
@@ -85,6 +88,10 @@ function oneLetterDiff(a, b) {
   return diff === 1;
 }
 
+function findLetterDiff(a, b) {
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return b[i];
+}
+
 function getChangedLetter(a, b) {
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return b[i].toUpperCase();
   return null;
@@ -117,6 +124,7 @@ async function playMove() {
   inventory[cost]--;
   current = w;
   history.push(w);
+  historyString += cost;
   startEl.value = w;
 
   renderHistory();
@@ -162,6 +170,7 @@ function chooseWords() {
         console.log(`Chosen ${len}-letter words:`, word1, word2);
         current = word1;
         history = [];
+        historyString = "↪";
         history.push(word1);
 
         inventory = {};
