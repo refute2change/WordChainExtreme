@@ -62,7 +62,7 @@ function renderInventory() {
 
       btn.onclick = () => {
         moveInput.value += letter.toLowerCase();
-        renderInventory();
+        updateAllBoxes();
       };
 
       rowDiv.appendChild(btn);
@@ -80,6 +80,7 @@ function renderInventory() {
   `;
   back.onclick = () => {
     moveInput.value = moveInput.value.slice(0, -1);
+    updateAllBoxes();
   };
 
   invEl.lastElementChild.appendChild(back);
@@ -131,10 +132,11 @@ async function playMove() {
   historyString += cost;
   startEl.value = w;
 
+  inputEl.value = '';
   renderHistory();
   renderInventory();
   updateAllBoxes();
-  inputEl.value = '';
+  
 
   setMsg(w === targetEl.value ? '🎉 Reached target!' : '');
 }
