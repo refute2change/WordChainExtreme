@@ -108,7 +108,7 @@ function chooseWords() {
         let index;
         do {
           index = Math.floor(Math.random() * templist.length);
-        } while (list[index].length > 2);
+        } while (templist[index].length < 2);
         const list = templist[index];
         if (!list || list.length < 2) {
         console.warn('Not enough words of length', len);
