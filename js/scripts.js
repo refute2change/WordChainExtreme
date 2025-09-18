@@ -209,45 +209,49 @@ targetEl.addEventListener('input', updateAllBoxes);
 // Initial render
 updateAllBoxes();
 
-function chooseWords() {
-  fetch('answerscompartments.json')
-    .then(res => res.json())
-    .then(groups => {
-        const len = wordLength.value;
-        const templist = groups[len];       // read current selection
-        let index;
-        do {
-          index = Math.floor(Math.random() * templist.length);
-        } while (templist[index].length < 2);
-        const list = templist[index];
-        if (!list || list.length < 2) {
-        console.warn('Not enough words of length', len);
-        return;
-        }
+async function chooseWords() {
+  try {
+    const res = await fetch('answerscompartments.json');
+    const groups = await res.json();
 
-        const i1 = Math.floor(Math.random() * list.length);
-        let i2;
-        do {
-        i2 = Math.floor(Math.random() * list.length);
-        } while (i2 === i1);
+    const len = wordLength.value;
+    const templist = groups[len];
 
-        word1 = list[i1];
-        word2 = list[i2];
+    let index;
+    do {
+      index = Math.floor(Math.random() * templist.length);
+    } while (templist[index].length < 2);
 
-        startEl.value = word1;
-        targetEl.value = word2;
+    const list = templist[index];
+    if (!list || list.length < 2) {
+      console.warn('Not enough words of length', len);
+      return;
+    }
 
-        console.log(`Chosen ${len}-letter words:`, word1, word2);
-        current = word1;
-        history = [];
-        historyString = "↪";
-        history.push(word1);
+    const i1 = Math.floor(Math.random() * list.length);
+    let i2;
+    do {
+      i2 = Math.floor(Math.random() * list.length);
+    } while (i2 === i1);
 
-        
+    word1 = list[i1];
+    word2 = list[i2];
 
+    startEl.value = word1;
+    targetEl.value = word2;
 
-    })
-    .catch(err => console.error('Error loading answers.json', err));
+    console.log(`Chosen ${len}-letter words:`, word1, word2);
+
+    current = word1;
+    history = [];
+    historyString = "↪";
+    history.push(word1);
+
+  } catch (err) {
+    console.error('Error loading answerscompartments.json', err);
+  }
+  console.log(startEl.value);
+  console.log(targetEl.value);  
 }
 
 function handleReset() {
