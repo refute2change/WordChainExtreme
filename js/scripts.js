@@ -264,3 +264,5 @@ function handleReset() {
 chooseWords();
 renderHistory();
 renderInventory();
+setMsg('');
+updateAllBoxes();
