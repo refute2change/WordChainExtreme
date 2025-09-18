@@ -247,18 +247,21 @@ async function chooseWords() {
     historyString = "↪";
     history.push(word1);
 
+    currentTyped = '';
+    inventory = {};
+    for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
+    renderHistory();
+    renderInventory();
+    setMsg('');
+    updateAllBoxes();
+
   } catch (err) {
     console.error('Error loading answerscompartments.json', err);
   }
-  console.log(startEl.value);
-  console.log(targetEl.value);  
 }
 
 function handleReset() {
   chooseWords();
-  currentTyped = '';
-  inventory = {};
-  for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
   renderHistory();
   renderInventory();
   setMsg('');
