@@ -9,7 +9,6 @@ const startEl = document.getElementById('startWord');
 const targetEl = document.getElementById('targetWord');
 const historyEl = document.getElementById('history');
 const msgEl = document.getElementById('message');
-const resetBtn = document.getElementById('reset');
 const playBtn = document.getElementById('play');
 const invEl = document.getElementById('inventory');
 const wordLength = document.getElementById('wordLength');
@@ -49,6 +48,19 @@ function renderInventory() {
     rowDiv.className = 'inv-row';
 
     for (const letter of row) {
+      if (letter === 'Z')
+      {
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'inv-btn action-btn';
+        resetBtn.innerHTML = `<div class="letter">↻</div><div class="count">reset</div>`;
+        resetBtn.onclick = () => {
+          currentTyped = '';
+          // your reset logic here:
+          // e.g. choose new start/target words and refill inventory
+          handleReset();
+        };
+        rowDiv.appendChild(resetBtn);
+      }
       const count = inventory[letter] ?? 0;
 
       const btn = document.createElement('button');
@@ -61,6 +73,7 @@ function renderInventory() {
       `;
 
       btn.onclick = () => {
+        if (currentTyped.length >= current.length) return;
         currentTyped += letter.toLowerCase();
         updateAllBoxes();
       };
@@ -84,6 +97,15 @@ function renderInventory() {
   };
 
   invEl.lastElementChild.appendChild(back);
+    // ▶ Play
+  const playBtn = document.createElement('button');
+  playBtn.className = 'inv-btn action-btn';
+  playBtn.innerHTML = `<div class="letter">▶</div><div class="count">play</div>`;
+  playBtn.onclick = playMove; // call your existing play function
+  invEl.lastElementChild.appendChild(playBtn);
+
+  // ↻ Reset
+
 }
 
 function oneLetterDiff(a, b) {
@@ -142,8 +164,6 @@ async function playMove() {
 }
 
 function setMsg(t) { msgEl.textContent = t; }
-
-playBtn.onclick = playMove;
 
 document.onkeydown = e => {
   console.log(e.key);
@@ -223,21 +243,22 @@ function chooseWords() {
         historyString = "↪";
         history.push(word1);
 
-        inventory = {};
-        for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
+        
 
-        renderHistory();
-        renderInventory();
-        setMsg('');
-        updateAllBoxes();
+
     })
     .catch(err => console.error('Error loading answers.json', err));
 }
 
-resetBtn.onclick = () => {
+function handleReset() {
   chooseWords();
   currentTyped = '';
+  inventory = {};
+  for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
+  renderHistory();
+  renderInventory();
   setMsg('');
+  updateAllBoxes();
 };
 
 chooseWords();

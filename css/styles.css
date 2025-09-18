@@ -5,19 +5,23 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 30px;
+  padding: 10px;
 }
 .container {
   background: #111;
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 20px;
+  padding: 15px 10px;
   max-width: 900px;
   width: 100%;
   color: #fff;
 }
+p {
+  margin: 5px 0;
+  color: #fff;
+}
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   margin-bottom: 10px;
   color: #fff;
 }
@@ -198,6 +202,10 @@ button:disabled { background: #94a3b8; color: #fff; }
   color: #222;
   text-transform: uppercase;
   user-select: none;
+}
+
+#startWord, #targetWord {
+  display: none;
 }
 
 /* 📱 Mobile: make keys bigger */
