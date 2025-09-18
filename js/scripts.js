@@ -7,7 +7,6 @@ const keyboardRows = [
 // DOM elements
 const startEl = document.getElementById('startWord');
 const targetEl = document.getElementById('targetWord');
-const inputEl = document.getElementById('moveInput');
 const historyEl = document.getElementById('history');
 const msgEl = document.getElementById('message');
 const resetBtn = document.getElementById('reset');
@@ -17,6 +16,7 @@ const wordLength = document.getElementById('wordLength');
 const moveBoxes = document.getElementById('moveBoxes');
 const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
+let currentTyped = '';
 
 let historyString = '↪';
 
@@ -61,7 +61,7 @@ function renderInventory() {
       `;
 
       btn.onclick = () => {
-        moveInput.value += letter.toLowerCase();
+        currentTyped += letter.toLowerCase();
         updateAllBoxes();
       };
 
@@ -79,7 +79,7 @@ function renderInventory() {
     <div class="count">del</div>
   `;
   back.onclick = () => {
-    moveInput.value = moveInput.value.slice(0, -1);
+    currentTyped = currentTyped.slice(0, -1);
     updateAllBoxes();
   };
 
@@ -103,7 +103,7 @@ function getChangedLetter(a, b) {
 }
 
 async function playMove() {
-  const w = inputEl.value.trim().toLowerCase();
+  const w = currentTyped.trim().toLowerCase();
   if (!w) return setMsg('Type a word first.');
   if (w.length !== current.length) return setMsg(`Must be ${current.length} letters.`);
 
@@ -132,7 +132,7 @@ async function playMove() {
   historyString += cost;
   startEl.value = w;
 
-  inputEl.value = '';
+  currentTyped = '';
   renderHistory();
   renderInventory();
   updateAllBoxes();
@@ -144,7 +144,26 @@ async function playMove() {
 function setMsg(t) { msgEl.textContent = t; }
 
 playBtn.onclick = playMove;
-inputEl.onkeydown = e => { if (e.key === 'Enter') playMove(); };
+
+document.onkeydown = e => {
+  console.log(e.key);
+  if (e.key === 'Backspace') {
+    currentTyped = currentTyped.slice(0, -1);
+    updateAllBoxes();
+    console.log(currentTyped);
+    return;
+  }
+  if (e.key === 'Enter') {
+    playMove();
+    return;
+  }
+  const letter = e.key.toUpperCase();
+  if (letter.length === 1 && letter >= 'A' && letter <= 'Z' && currentTyped.length < current.length) {
+    currentTyped += letter;
+    console.log(currentTyped);
+    updateAllBoxes();
+  }
+};
 
 function renderWordBoxes(container, word, totalLength) {
   container.innerHTML = '';
@@ -160,11 +179,10 @@ function updateAllBoxes() {
   const len = parseInt(wordLength.value, 10);
   renderWordBoxes(startBoxes, startEl.value, len);
   renderWordBoxes(targetBoxes, targetEl.value, len);
-  renderWordBoxes(moveBoxes, inputEl.value, len);
+  renderWordBoxes(moveBoxes, currentTyped, len);
 }
 
 // Update whenever something changes
-inputEl.addEventListener('input', updateAllBoxes);
 startEl.addEventListener('input', updateAllBoxes);
 targetEl.addEventListener('input', updateAllBoxes);
 
@@ -218,7 +236,7 @@ function chooseWords() {
 
 resetBtn.onclick = () => {
   chooseWords();
-  inputEl.value = '';
+  currentTyped = '';
   setMsg('');
 };
 
