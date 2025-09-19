@@ -209,8 +209,33 @@ targetEl.addEventListener('input', updateAllBoxes);
 // Initial render
 updateAllBoxes();
 
+function pickWords(groups) {
+  const len = wordLength.value;
+    const templist = groups[len];
+
+    let index;
+    do {
+      index = Math.floor(Math.random() * templist.length);
+    } while (templist[index].length < 2);
+
+    const list = templist[index];
+    if (!list || list.length < 2) {
+      console.warn('Not enough words of length', len);
+      return;
+    }
+
+    const i1 = Math.floor(Math.random() * list.length);
+    let i2;
+    do {
+      i2 = Math.floor(Math.random() * list.length);
+    } while (i2 === i1);
+
+    word1 = list[i1];
+    word2 = list[i2];
+    console.log(`Chosen words:`, word1, word2);
+}
+
 async function chooseWords() {
-  try {
     const res = await fetch('answerscompartments.json');
     const groups = await res.json();
 
@@ -254,10 +279,6 @@ async function chooseWords() {
     renderInventory();
     setMsg('');
     updateAllBoxes();
-
-  } catch (err) {
-    console.error('Error loading answerscompartments.json', err);
-  }
 }
 
 function handleReset() {
