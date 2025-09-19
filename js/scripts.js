@@ -239,8 +239,10 @@ function pickWords(groups, len) {
   return {"start": word1, "target": word2};
 }
 
-function createLevels()
+async function createLevels()
 {
+  const res = await fetch('answerscompartments.json');
+  const groups = await res.json();
   levels = [];
   let i;
   for (const lvl of levelconstraints)
