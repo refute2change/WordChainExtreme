@@ -293,6 +293,21 @@ function handleReset() {
   updateAllBoxes();
 };
 
+function setup(words) {
+  startEl.value = words.start;
+  targetEl.value = words.target;
+  current = words.start;
+  history = [current];
+  historyString = '↪';
+  currentTyped = '';
+  inventory = {};
+  for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
+  renderHistory();
+  renderInventory();
+  setMsg('');
+  updateAllBoxes();
+}
+
 createLevels();
 chooseWords();
 renderHistory();
