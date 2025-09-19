@@ -4,6 +4,10 @@ const keyboardRows = [
   ['Z','X','C','V','B','N','M']
 ];
 
+const levelconstraints = [{level:1, stages: [3]}, {level:2, stages: [3, 3]}, {level:3, stages: [3, 3, 3]},
+                          {level:4, stages: [3, 4]}, {level:5, stages: [3, 4, 4]}, {level:6, stages: [4, 4, 4, 4]},
+                          {level:7, stages: [5, 5]}, {level:8, stages: [4, 5, 4, 5]}, {level:9, stages: [3, 3, 4, 4, 5, 5]}];
+
 // DOM elements
 const startEl = document.getElementById('startWord');
 const targetEl = document.getElementById('targetWord');
@@ -16,7 +20,7 @@ const moveBoxes = document.getElementById('moveBoxes');
 const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
 let currentTyped = '';
-
+let levels = [];
 let historyString = '↪';
 
 // game state
@@ -235,6 +239,24 @@ function pickWords(groups, len) {
   return {"start": word1, "target": word2};
 }
 
+function createLevels()
+{
+  levels = [];
+  let i;
+  for (const lvl of levelconstraints)
+  {
+    i = lvl.level;
+    let words = [];
+    for (const stageLen of lvl.stages)
+    {
+      const res = pickWords(groups, stageLen);
+      words.push(res);
+    }
+    levels.push({level: i, words: words});
+  }
+  console.log('Created levels:', levels);
+}
+
 async function chooseWords() {
   const res = await fetch('answerscompartments.json');
   const groups = await res.json();
@@ -271,6 +293,7 @@ function handleReset() {
   updateAllBoxes();
 };
 
+createLevels();
 chooseWords();
 renderHistory();
 renderInventory();
