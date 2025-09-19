@@ -265,13 +265,11 @@ async function chooseWords() {
 
   const chosenWords = pickWords(groups, wordLength.value);
 
-  word1 = chosenWords[i1];
-  word2 = chosenWords[i2];
+  word1 = chosenWords.start;
+  word2 = chosenWords.target;
 
   startEl.value = word1;
   targetEl.value = word2;
-
-  console.log(`Chosen ${len}-letter words:`, word1, word2);
 
   current = word1;
   history = [];
