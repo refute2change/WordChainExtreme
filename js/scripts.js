@@ -209,76 +209,58 @@ targetEl.addEventListener('input', updateAllBoxes);
 // Initial render
 updateAllBoxes();
 
-function pickWords(groups) {
-  const len = wordLength.value;
-    const templist = groups[len];
+function pickWords(groups, len) {
+  const templist = groups[len];
 
-    let index;
-    do {
-      index = Math.floor(Math.random() * templist.length);
-    } while (templist[index].length < 2);
+  let index;
+  do {
+    index = Math.floor(Math.random() * templist.length);
+  } while (templist[index].length < 2);
 
-    const list = templist[index];
-    if (!list || list.length < 2) {
-      console.warn('Not enough words of length', len);
-      return;
-    }
+  const list = templist[index];
+  if (!list || list.length < 2) {
+    console.warn('Not enough words of length', len);
+    return;
+  }
 
-    const i1 = Math.floor(Math.random() * list.length);
-    let i2;
-    do {
-      i2 = Math.floor(Math.random() * list.length);
-    } while (i2 === i1);
+  const i1 = Math.floor(Math.random() * list.length);
+  let i2;
+  do {
+    i2 = Math.floor(Math.random() * list.length);
+  } while (i2 === i1);
 
-    word1 = list[i1];
-    word2 = list[i2];
-    console.log(`Chosen words:`, word1, word2);
+  word1 = list[i1];
+  word2 = list[i2];
+  console.log(`Chosen words:`, word1, word2);
+  return {"start": word1, "target": word2};
 }
 
 async function chooseWords() {
-    const res = await fetch('answerscompartments.json');
-    const groups = await res.json();
+  const res = await fetch('answerscompartments.json');
+  const groups = await res.json();
 
-    const len = wordLength.value;
-    const templist = groups[len];
+  const chosenWords = pickWords(groups, wordLength.value);
 
-    let index;
-    do {
-      index = Math.floor(Math.random() * templist.length);
-    } while (templist[index].length < 2);
+  word1 = chosenWords[i1];
+  word2 = chosenWords[i2];
 
-    const list = templist[index];
-    if (!list || list.length < 2) {
-      console.warn('Not enough words of length', len);
-      return;
-    }
+  startEl.value = word1;
+  targetEl.value = word2;
 
-    const i1 = Math.floor(Math.random() * list.length);
-    let i2;
-    do {
-      i2 = Math.floor(Math.random() * list.length);
-    } while (i2 === i1);
+  console.log(`Chosen ${len}-letter words:`, word1, word2);
 
-    word1 = list[i1];
-    word2 = list[i2];
+  current = word1;
+  history = [];
+  historyString = "↪";
+  history.push(word1);
 
-    startEl.value = word1;
-    targetEl.value = word2;
-
-    console.log(`Chosen ${len}-letter words:`, word1, word2);
-
-    current = word1;
-    history = [];
-    historyString = "↪";
-    history.push(word1);
-
-    currentTyped = '';
-    inventory = {};
-    for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
-    renderHistory();
-    renderInventory();
-    setMsg('');
-    updateAllBoxes();
+  currentTyped = '';
+  inventory = {};
+  for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
+  renderHistory();
+  renderInventory();
+  setMsg('');
+  updateAllBoxes();
 }
 
 function handleReset() {
