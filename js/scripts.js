@@ -362,5 +362,9 @@ function highlightProgress(index) {
   });
 }
 
-await createLevels();
-loadLevel();
+async function init() {
+  await createLevels();
+  loadLevel();
+}
+
+init();
