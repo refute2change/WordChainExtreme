@@ -362,5 +362,5 @@ function highlightProgress(index) {
   });
 }
 
-createLevels();
+await createLevels();
 loadLevel();
