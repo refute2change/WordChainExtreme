@@ -26,6 +26,7 @@ let currentLevel = 0;
 let currentStage = 0;
 const progressBar = document.getElementById('progressBar');
 let currentLevelIndex = 0;
+let lengthOfWord;
 
 // game state
 let current = startEl.value;
@@ -141,7 +142,7 @@ async function playMove() {
     const res = await fetch('legalanswers.json');
     const groups = await res.json();
 
-    const len = wordLength.value; // read current selection
+    const len = lengthOfWord.value; // read current selection
     const list = new Set(groups[len]);
 
     if (!list.has(w)) return setMsg('Not in dictionary.');
@@ -204,7 +205,7 @@ function renderWordBoxes(container, word, totalLength) {
 }
 
 function updateAllBoxes() {
-  const len = parseInt(wordLength.value, 10);
+  const len = parseInt(startEl.value.length, 10);
   renderWordBoxes(startBoxes, startEl.value, len);
   renderWordBoxes(targetBoxes, targetEl.value, len);
   renderWordBoxes(moveBoxes, currentTyped, len);
@@ -297,6 +298,7 @@ function handleReset() {
 function setup(words) {
   startEl.value = words.start;
   targetEl.value = words.target;
+  lengthOfWord = words.start.length;
   current = words.start;
   history = [current];
   historyString = '↪';
