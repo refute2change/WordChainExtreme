@@ -313,10 +313,6 @@ function loadLevel() {
   renderProgress();
   setup(levels[currentLevelIndex].words[currentStage]);
   highlightProgress(currentLevelIndex);
-  renderHistory();
-  renderInventory();
-  setMsg('');
-  updateAllBoxes();
 }
 
 function renderProgress() {
