@@ -216,3 +216,65 @@ button:disabled { background: #94a3b8; color: #fff; }
     font-size: 18px;
   }
 }
+
+#progressBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+.level-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.level-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #333;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.level-circle:hover {
+  background: #555;
+  transform: scale(1.1);
+}
+
+.level-circle.active {
+  background: #4fc3f7;
+  color: #111;
+}
+
+.connector {
+  flex: 1;
+  height: 4px;
+  background: #555;
+}
+
+.stage-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.stage-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #777;
+  font-size: 10px;
+  color: #111;
+  text-align: center;
+  line-height: 14px;
+}

@@ -22,6 +22,10 @@ const targetBoxes = document.getElementById('targetBoxes');
 let currentTyped = '';
 let levels = [];
 let historyString = '↪';
+let currentLevel = 0;
+let currentStage = 0;
+const progressBar = document.getElementById('progressBar');
+let currentLevelIndex = 0;
 
 // game state
 let current = startEl.value;
@@ -308,6 +312,55 @@ function setup(words) {
   updateAllBoxes();
 }
 
+function renderProgress(levels) {
+  progressBar.innerHTML = '';
+
+  levels.forEach((lv, index) => {
+    const levelDiv = document.createElement('div');
+    levelDiv.className = 'level-node';
+
+    // big circle for level
+    const levelBtn = document.createElement('div');
+    levelBtn.className = 'level-circle';
+    levelBtn.textContent = lv.level;
+    levelBtn.onclick = () => {
+      currentLevelIndex = index;
+      loadLevel(index);
+      highlightProgress(index);
+    };
+
+    // container for stages
+    const stagesDiv = document.createElement('div');
+    stagesDiv.className = 'stage-row';
+
+    lv.stages.forEach((_, si) => {
+      const stage = document.createElement('div');
+      stage.className = 'stage-dot';
+      stage.textContent = si + 1;
+      stagesDiv.appendChild(stage);
+    });
+
+    levelDiv.appendChild(levelBtn);
+    levelDiv.appendChild(stagesDiv);
+
+    progressBar.appendChild(levelDiv);
+
+    // add connector line except after last
+    if (index < levels.length - 1) {
+      const connector = document.createElement('div');
+      connector.className = 'connector';
+      progressBar.appendChild(connector);
+    }
+  });
+}
+
+function highlightProgress(index) {
+  document.querySelectorAll('.level-circle').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
+}
+
+renderProgress(levels);
 createLevels();
 chooseWords();
 renderHistory();
