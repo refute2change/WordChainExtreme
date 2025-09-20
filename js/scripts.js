@@ -33,9 +33,20 @@ let current = startEl.value;
 let history = [current];
 let inventory = {};
 for (let i = 65; i <= 90; i++) {
-  inventory[String.fromCharCode(i)] = 1000;
+  inventory[String.fromCharCode(i)] = 0;
 }
 let word1, word2;
+
+function goNext() {
+  if (startEl.value !== targetEl.value) return;
+  currentStage++;
+  if (currentStage == levelconstraints[currentLevelIndex].stages.length && currentLevelIndex < levels.length - 1) {
+    currentLevelIndex++;
+    currentStage = 0;
+    
+  }
+  loadLevel();
+}
 
 function renderHistory() {
   let i = 0;
@@ -62,12 +73,7 @@ function renderInventory() {
         const resetBtn = document.createElement('button');
         resetBtn.className = 'inv-btn action-btn';
         resetBtn.innerHTML = `<div class="letter">↻</div><div class="count">reset</div>`;
-        resetBtn.onclick = () => {
-          currentTyped = '';
-          // your reset logic here:
-          // e.g. choose new start/target words and refill inventory
-          handleReset();
-        };
+        resetBtn.onclick = goNext; // call your existing reset function
         rowDiv.appendChild(resetBtn);
       }
       const count = inventory[letter] ?? 0;
@@ -142,7 +148,7 @@ async function playMove() {
     const res = await fetch('legalanswers.json');
     const groups = await res.json();
 
-    const len = lengthOfWord.value; // read current selection
+    const len = lengthOfWord; // read current selection
     const list = new Set(groups[len]);
 
     if (!list.has(w)) return setMsg('Not in dictionary.');
@@ -303,8 +309,20 @@ function setup(words) {
   history = [current];
   historyString = '↪';
   currentTyped = '';
-  inventory = {};
-  for (let i = 65; i <= 90; i++) inventory[String.fromCharCode(i)] = 1000;
+  if (currentStage === 0)
+  {
+    let lv = levels[currentLevelIndex];
+    if ("inventory" in lv)
+    {
+      for (const key in lv.inventory)
+      {
+        inventory[key] = (inventory[key] ?? 0) + lv.inventory[key];
+      }
+    }
+    else for (let i = 65; i <= 90; i++) {
+        inventory[String.fromCharCode(i)] = 1000;
+      }
+  }
   renderHistory();
   renderInventory();
   setMsg('');
