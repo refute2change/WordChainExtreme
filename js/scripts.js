@@ -22,11 +22,13 @@ const targetBoxes = document.getElementById('targetBoxes');
 let currentTyped = '';
 let levels = [];
 let historyString = '↪';
-let currentLevel = 0;
 let currentStage = 0;
 const progressBar = document.getElementById('progressBar');
 let currentLevelIndex = 0;
 let lengthOfWord;
+let currentTotalStage = 0;
+let totalStages = 0;
+let LevelsCompleted = 0;
 
 // game state
 let current = startEl.value;
@@ -40,11 +42,11 @@ let word1, word2;
 function goNext() {
   const nextBtn = document.getElementById('nextBtn');
   if (nextBtn.disabled) return;
+  currentTotalStage++;
   currentStage++;
   if (currentStage == levelconstraints[currentLevelIndex].stages.length && currentLevelIndex < levels.length - 1) {
     currentLevelIndex++;
     currentStage = 0;
-    
   }
   loadLevel();
 }
@@ -177,8 +179,13 @@ async function playMove() {
   renderInventory();
   updateAllBoxes();
   
-
-  setMsg(w === targetEl.value ? '🎉 Reached target!' : '');
+  if (w === targetEl.value) {
+    totalStages++;
+    if (currentStage === levelconstraints[currentLevelIndex].stages.length - 1) {
+      LevelsCompleted++;
+    }
+    setMsg('🎉 Reached target!');
+  }
 }
 
 function setMsg(t) { msgEl.textContent = t; }
@@ -389,7 +396,7 @@ function highlightProgress(index) {
     el.classList.toggle('active', i === index);
   });
   document.querySelectorAll('.stage-dot').forEach((el, i) => {
-    el.classList.toggle('active', i === currentStage);
+    el.classList.toggle('active', i === currentStage && i === totalStages);
   });
 }
 
