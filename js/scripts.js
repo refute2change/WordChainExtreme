@@ -365,4 +365,5 @@ function highlightProgress(index) {
   });
 }
 
+createLevels();
 loadLevel();
