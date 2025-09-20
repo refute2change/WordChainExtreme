@@ -348,6 +348,7 @@ function renderProgress() {
     // big circle for level
     const levelBtn = document.createElement('div');
     levelBtn.className = 'level-circle';
+    levelBtn.classList.toggle('completed', index < currentLevelIndex);
     levelBtn.textContent = lv.level;
     console.log(lv.level);
 
@@ -358,6 +359,9 @@ function renderProgress() {
     for (let si = 0; si < lv.stages.length; si++) {
       const stage = document.createElement('div');
       stage.className = 'stage-dot';
+      if (index < currentLevelIndex || (index === currentLevelIndex && si < currentStage)) {
+        stage.classList.toggle('completed');
+      }
       stage.textContent = si + 1;
       stagesDiv.appendChild(stage);
     }
@@ -377,6 +381,7 @@ function renderProgress() {
 }
 
 function highlightProgress(index) {
+  if (startEl.value === targetEl.value) return;
   document.querySelectorAll('.level-circle').forEach((el, i) => {
     el.classList.toggle('active', i === index);
   });
