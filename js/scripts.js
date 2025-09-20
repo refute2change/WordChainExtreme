@@ -312,10 +312,10 @@ function setup(words) {
   updateAllBoxes();
 }
 
-function renderProgress(levels) {
+function renderProgress() {
   progressBar.innerHTML = '';
 
-  levels.forEach((lv, index) => {
+  for (let index = 0; index < levels.length; index++) {
     const levelDiv = document.createElement('div');
     levelDiv.className = 'level-node';
 
@@ -324,22 +324,17 @@ function renderProgress(levels) {
     levelBtn.className = 'level-circle';
     levelBtn.textContent = lv.level;
     console.log(lv.level);
-    levelBtn.onclick = () => {
-      currentLevelIndex = index;
-      loadLevel(index);
-      highlightProgress(index);
-    };
 
     // container for stages
     const stagesDiv = document.createElement('div');
     stagesDiv.className = 'stage-row';
 
-    lv.stages.forEach((_, si) => {
+    for (let si = 0; si < lv.stages.length; si++) {
       const stage = document.createElement('div');
       stage.className = 'stage-dot';
       stage.textContent = si + 1;
       stagesDiv.appendChild(stage);
-    });
+    }
 
     levelDiv.appendChild(levelBtn);
     levelDiv.appendChild(stagesDiv);
@@ -352,7 +347,7 @@ function renderProgress(levels) {
       connector.className = 'connector';
       progressBar.appendChild(connector);
     }
-  });
+  }
 }
 
 function highlightProgress(index) {
