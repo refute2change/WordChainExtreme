@@ -323,6 +323,7 @@ function renderProgress(levels) {
     const levelBtn = document.createElement('div');
     levelBtn.className = 'level-circle';
     levelBtn.textContent = lv.level;
+    console.log(lv.level);
     levelBtn.onclick = () => {
       currentLevelIndex = index;
       loadLevel(index);
