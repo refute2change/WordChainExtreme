@@ -311,6 +311,7 @@ function setup(words) {
 
 function loadLevel() {
   renderProgress();
+  console.log(levels[currentLevelIndex].words[currentStage]);
   setup(levels[currentLevelIndex].words[currentStage]);
   highlightProgress(currentLevelIndex);
 }
