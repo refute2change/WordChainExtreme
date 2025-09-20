@@ -214,9 +214,6 @@ function updateAllBoxes() {
 startEl.addEventListener('input', updateAllBoxes);
 targetEl.addEventListener('input', updateAllBoxes);
 
-// Initial render
-updateAllBoxes();
-
 function pickWords(groups, len) {
   const templist = groups[len];
 
