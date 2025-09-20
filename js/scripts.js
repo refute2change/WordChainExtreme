@@ -38,7 +38,8 @@ for (let i = 65; i <= 90; i++) {
 let word1, word2;
 
 function goNext() {
-  if (startEl.value !== targetEl.value) return;
+  const nextBtn = document.getElementById('nextBtn');
+  if (nextBtn.disabled) return;
   currentStage++;
   if (currentStage == levelconstraints[currentLevelIndex].stages.length && currentLevelIndex < levels.length - 1) {
     currentLevelIndex++;
@@ -70,11 +71,13 @@ function renderInventory() {
     for (const letter of row) {
       if (letter === 'Z')
       {
-        const resetBtn = document.createElement('button');
-        resetBtn.className = 'inv-btn action-btn';
-        resetBtn.innerHTML = `<div class="letter">↻</div><div class="count">reset</div>`;
-        resetBtn.onclick = goNext; // call your existing reset function
-        rowDiv.appendChild(resetBtn);
+        const nextBtn = document.createElement('button');
+        nextBtn.setAttribute('id', 'nextBtn');
+        nextBtn.className = 'inv-btn action-btn';
+        nextBtn.innerHTML = `<div class="letter"></div><div class="count">next</div>`;
+        nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
+        nextBtn.onclick = goNext; // call your existing reset function
+        rowDiv.appendChild(nextBtn);
       }
       const count = inventory[letter] ?? 0;
 
@@ -333,7 +336,7 @@ function loadLevel() {
   renderProgress();
   console.log(levels[currentLevelIndex].words[currentStage]);
   setup(levels[currentLevelIndex].words[currentStage]);
-  highlightProgress(currentLevelIndex);
+  highlightProgress(currentStage);
 }
 
 function renderProgress() {
@@ -384,6 +387,9 @@ function highlightProgress(index) {
   if (startEl.value === targetEl.value) return;
   document.querySelectorAll('.level-circle').forEach((el, i) => {
     el.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.stage-dot').forEach((el, i) => {
+    el.classList.toggle('active', i === currentStage);
   });
 }
 

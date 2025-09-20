@@ -284,6 +284,11 @@ button:disabled { background: #94a3b8; color: #fff; }
   line-height: 14px;
 }
 
+.stage-dot.active {
+  background: #dfeea1;
+  color: #111;
+}
+
 .stage-dot.completed {
   background: #8ae696;
   color: #111;
