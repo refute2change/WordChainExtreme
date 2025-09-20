@@ -312,13 +312,25 @@ function setup(words) {
   updateAllBoxes();
 }
 
+function loadLevel() {
+  renderProgress();
+  setup(levels[currentLevelIndex].words[currentStage]);
+  highlightProgress(currentLevelIndex);
+  renderHistory();
+  renderInventory();
+  setMsg('');
+  updateAllBoxes();
+}
+
 function renderProgress() {
   progressBar.innerHTML = '';
+  let lv;
 
-  for (let index = 0; index < levels.length; index++) {
+  for (let index = 0; index < levelconstraints.length; index++) {
     const levelDiv = document.createElement('div');
     levelDiv.className = 'level-node';
 
+    lv = levelconstraints[index];
     // big circle for level
     const levelBtn = document.createElement('div');
     levelBtn.className = 'level-circle';
@@ -342,7 +354,7 @@ function renderProgress() {
     progressBar.appendChild(levelDiv);
 
     // add connector line except after last
-    if (index < levels.length - 1) {
+    if (index < levelconstraints.length - 1) {
       const connector = document.createElement('div');
       connector.className = 'connector';
       progressBar.appendChild(connector);
@@ -356,10 +368,4 @@ function highlightProgress(index) {
   });
 }
 
-renderProgress(levels);
-createLevels();
-chooseWords();
-renderHistory();
-renderInventory();
-setMsg('');
-updateAllBoxes();
+loadLevel();
