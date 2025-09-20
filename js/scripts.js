@@ -396,7 +396,7 @@ function highlightProgress(index) {
     el.classList.toggle('active', i === index);
   });
   document.querySelectorAll('.stage-dot').forEach((el, i) => {
-    el.classList.toggle('active', i === currentStage && i === totalStages);
+    el.classList.toggle('active', i === currentTotalStage && i === totalStages);
   });
 }
 
