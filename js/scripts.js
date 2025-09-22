@@ -263,6 +263,11 @@ function pickWords(groups, len) {
 
 async function createLevels()
 {
+  currentLevelIndex = 0;
+  currentStage = 0;
+  currentTotalStage = 0; //
+  totalStages = 0; //
+  LevelsCompleted = 0; //
   const res = await fetch('answerscompartments.json');
   const groups = await res.json();
   levels = [];
