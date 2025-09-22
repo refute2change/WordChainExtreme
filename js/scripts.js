@@ -20,20 +20,20 @@ const moveBoxes = document.getElementById('moveBoxes');
 const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
 let currentTyped = '';
-let levels = [];
-let historyString = '↪';
-let currentStage = 0;
+let levels = []; //
+let historyString = '↪'; //
+let currentStage = 0; //
 const progressBar = document.getElementById('progressBar');
-let currentLevelIndex = 0;
+let currentLevelIndex = 0; //
 let lengthOfWord;
-let currentTotalStage = 0;
-let totalStages = 0;
-let LevelsCompleted = 0;
+let currentTotalStage = 0; //
+let totalStages = 0; //
+let LevelsCompleted = 0; //
 
 // game state
 let current = startEl.value;
-let history = [current];
-let inventory = {};
+let history = [current]; //
+let inventory = {}; //
 for (let i = 65; i <= 90; i++) {
   inventory[String.fromCharCode(i)] = 0;
 }
@@ -49,6 +49,8 @@ function goNext() {
     currentStage = 0;
   }
   loadLevel();
+  localStorage.setItem('wordChainState', JSON.stringify(createState()));
+  console.log(localStorage.getItem('wordChainState'));
 }
 
 function renderHistory() {
@@ -416,7 +418,36 @@ function highlightProgress(index) {
   });
 }
 
+function loadGameState() {
+  const savedState = localStorage.getItem('wordChainState');
+  if (!savedState) return false;
+  try {
+    const state = JSON.parse(savedState);
+    levels = state.levels || [];
+    currentLevelIndex = state.currentLevelIndex || 0;
+    currentStage = state.currentStage || 0;
+    currentTotalStage = state.currentTotalStage || 0;
+    totalStages = state.totalStages || 0;
+    LevelsCompleted = state.LevelsCompleted || 0;
+    history = state.history || [];
+    historyString = state.historyString || '↪';
+    inventory = state.inventory || {};
+    startEl.value = history[history.length - 1] || '';
+    renderHistory();
+    randerInventory();
+    renderProgress();
+    highlightProgress(currentLevelIndex);
+    return true;
+  }
+  catch (err) {
+    console.error('Error loading game state:', err);
+    return false;
+  }
+}
+
 async function init() {
+  let loaded = loadGameState();
+  if (loaded) return;
   await createLevels();
   loadLevel();
 }
