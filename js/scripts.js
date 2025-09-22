@@ -186,7 +186,8 @@ async function playMove() {
     }
     setMsg('🎉 Reached target!');
   }
-  console.log(createState())
+  localStorage.setItem('wordChainState', JSON.stringify(createState()));
+  console.log(localStorage.getItem('wordChainState'));
 }
 
 function setMsg(t) { msgEl.textContent = t; }
@@ -349,12 +350,12 @@ function loadLevel() {
 
 function createState() {
   return {
+    levels,
     currentLevelIndex,
     currentStage,
     currentTotalStage,
     totalStages,
     LevelsCompleted,
-    current,
     history,
     historyString,
     inventory
