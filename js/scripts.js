@@ -442,7 +442,7 @@ function loadGameState() {
     historyString = state.historyString || '↪';
     inventory = state.inventory || {};
     startEl.value = history[history.length - 1] || '';
-    targetEl.value = levels[currentLevelIndex][currentStage].target;
+    targetEl.value = levels[currentLevelIndex].words[currentStage].target;
     currentTyped = '';
     renderHistory();
     renderInventory();
