@@ -186,6 +186,7 @@ async function playMove() {
     }
     setMsg('🎉 Reached target!');
   }
+  console.log(createState())
 }
 
 function setMsg(t) { msgEl.textContent = t; }
@@ -344,6 +345,20 @@ function loadLevel() {
   console.log(levels[currentLevelIndex].words[currentStage]);
   setup(levels[currentLevelIndex].words[currentStage]);
   highlightProgress(currentLevelIndex);
+}
+
+function createState() {
+  return {
+    currentLevelIndex,
+    currentStage,
+    currentTotalStage,
+    totalStages,
+    LevelsCompleted,
+    current,
+    history,
+    historyString,
+    inventory
+  };
 }
 
 function renderProgress() {
