@@ -434,7 +434,7 @@ function loadGameState() {
     inventory = state.inventory || {};
     startEl.value = history[history.length - 1] || '';
     renderHistory();
-    randerInventory();
+    renderInventory();
     renderProgress();
     highlightProgress(currentLevelIndex);
     return true;
