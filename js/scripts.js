@@ -284,6 +284,8 @@ async function createLevels()
     levels.push({level: i, words: words});
   }
   console.log('Created levels:', levels);
+  localStorage.setItem('wordChainState', JSON.stringify(createState()));
+  console.log(localStorage.getItem('wordChainState'));
 }
 
 async function chooseWords() {
@@ -346,6 +348,8 @@ function setup(words) {
   renderInventory();
   setMsg('');
   updateAllBoxes();
+  localStorage.setItem('wordChainState', JSON.stringify(createState()));
+  console.log(localStorage.getItem('wordChainState'));
 }
 
 function loadLevel() {
@@ -452,6 +456,7 @@ function loadGameState() {
 
 async function init() {
   let loaded = loadGameState();
+  console.log(loaded);
   if (loaded) return;
   await createLevels();
   loadLevel();
