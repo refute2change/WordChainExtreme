@@ -458,6 +458,7 @@ async function init() {
   let loaded = loadGameState();
   console.log(loaded);
   if (loaded) return;
+  localStorage.removeItem('wordChainGame');
   await createLevels();
   loadLevel();
 }
