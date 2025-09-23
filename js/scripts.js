@@ -44,13 +44,13 @@ nextBtn.setAttribute('id', 'nextBtn');
 nextBtn.className = 'action-btn';
 nextBtn.innerHTML = `<div class="count">next</div>`;
 nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
-nextBtn.onclick = goNext; // call your existing reset function
+nextBtn.onclick = goNext; // call your existing next function
 buttonTray.appendChild(nextBtn);
 const resetBtn = document.createElement('button');
 resetBtn.setAttribute('id', 'resetBtn');
 resetBtn.className = 'action-btn';
 resetBtn.innerHTML = `<div class="count">reset</div>`;
-resetBtn.onclick = goNext; // call your existing reset function
+resetBtn.onclick = fullReset; // call your existing reset function
 buttonTray.appendChild(resetBtn);
 let word1, word2;
 
