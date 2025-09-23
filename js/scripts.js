@@ -373,43 +373,53 @@ function createState() {
   };
 }
 
+
 function renderProgress() {
   progressBar.innerHTML = '';
-  let lv;
 
-  for (let index = 0; index < levelconstraints.length; index++) {
+  for (let index = 0; index < levels.length; index++) {
+    const lv = levels[index];
+
     const levelDiv = document.createElement('div');
     levelDiv.className = 'level-node';
 
-    lv = levelconstraints[index];
     // big circle for level
     const levelBtn = document.createElement('div');
     levelBtn.className = 'level-circle';
-    levelBtn.classList.toggle('completed', index < currentLevelIndex);
     levelBtn.textContent = lv.level;
-    console.log(lv.level);
 
-    // container for stages
-    const stagesDiv = document.createElement('div');
-    stagesDiv.className = 'stage-row';
-
-    for (let si = 0; si < lv.stages.length; si++) {
-      const stage = document.createElement('div');
-      stage.className = 'stage-dot';
-      if (index < currentLevelIndex || (index === currentLevelIndex && si < currentStage)) {
-        stage.classList.toggle('completed');
-      }
-      stage.textContent = si + 1;
-      stagesDiv.appendChild(stage);
+    // highlight active level
+    if (index === currentLevelIndex) {
+      levelBtn.classList.add('active');
     }
 
+    levelBtn.onclick = () => {
+      currentLevelIndex = index;
+      loadLevel(index);
+      renderProgress(); // re-render to show stage dots for the new active level
+    };
+
     levelDiv.appendChild(levelBtn);
-    levelDiv.appendChild(stagesDiv);
+
+    // only show stage dots for the active level
+    if (index === currentLevelIndex) {
+      const stagesDiv = document.createElement('div');
+      stagesDiv.className = 'stage-row';
+
+      for (let si = 0; si < lv.stages.length; si++) {
+        const stage = document.createElement('div');
+        stage.className = 'stage-dot';
+        stage.textContent = si + 1;
+        stagesDiv.appendChild(stage);
+      }
+
+      levelDiv.appendChild(stagesDiv);
+    }
 
     progressBar.appendChild(levelDiv);
 
     // add connector line except after last
-    if (index < levelconstraints.length - 1) {
+    if (index < levels.length - 1) {
       const connector = document.createElement('div');
       connector.className = 'connector';
       progressBar.appendChild(connector);
