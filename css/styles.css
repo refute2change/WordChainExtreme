@@ -217,8 +217,13 @@ button:disabled { background: #94a3b8; color: #fff; }
 @media (max-width: 768px) {
   .inv-btn {
     width: 30px;
-    height: 30px;
+    height: 45px;
     font-size: 18px;
+  }
+
+  .letter-box {
+    width: 35px;
+    height: 35px;
   }
 }
 
