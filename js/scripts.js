@@ -25,6 +25,7 @@ let historyString = '↪'; //
 let currentStage = 0; //
 const progressBar = document.getElementById('progressBar');
 const stageContainer = document.getElementById('stageContainer');
+const buttonTray = document.getElementById('buttons');
 let currentLevelIndex = 0; //
 let lengthOfWord;
 let currentTotalStage = 0; //
@@ -38,6 +39,19 @@ let inventory = {}; //
 for (let i = 65; i <= 90; i++) {
   inventory[String.fromCharCode(i)] = 0;
 }
+const nextBtn = document.createElement('button');
+nextBtn.setAttribute('id', 'nextBtn');
+nextBtn.className = 'action-btn';
+nextBtn.innerHTML = `<div class="count">next</div>`;
+nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
+nextBtn.onclick = goNext; // call your existing reset function
+buttonTray.appendChild(nextBtn);
+const resetBtn = document.createElement('button');
+resetBtn.setAttribute('id', 'resetBtn');
+resetBtn.className = 'action-btn';
+resetBtn.innerHTML = `<div class="count">reset</div>`;
+resetBtn.onclick = goNext; // call your existing reset function
+buttonTray.appendChild(resetBtn);
 let word1, word2;
 
 function goNext() {
@@ -468,13 +482,17 @@ function loadGameState() {
   }
 }
 
+async function fullReset() {
+  await createLevels();
+  loadLevel();
+}
+
 async function init() {
   let loaded = loadGameState();
   console.log(loaded);
   if (loaded) return;
   localStorage.removeItem('wordChainGame');
-  await createLevels();
-  loadLevel();
+  fullReset();
 }
 
 init();

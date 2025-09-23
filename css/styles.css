@@ -113,6 +113,10 @@ button:disabled { background: #94a3b8; color: #fff; }
   background-color: #111;
   color: #fff;
 }
+#buttons {
+  display: flex;
+  justify-content: center;
+}
 .inv-item {
   padding: 4px 8px;
   background: #545353;
