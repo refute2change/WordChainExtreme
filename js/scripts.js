@@ -448,6 +448,7 @@ function loadGameState() {
     renderInventory();
     renderProgress();
     highlightProgress(currentLevelIndex);
+    updateAllBoxes();
     return true;
   }
   catch (err) {
