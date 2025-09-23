@@ -181,6 +181,7 @@ async function playMove() {
   renderHistory();
   renderInventory();
   updateAllBoxes();
+  renderProgress();
   
   if (w === targetEl.value) {
     totalStages++;
@@ -197,6 +198,7 @@ function setMsg(t) { msgEl.textContent = t; }
 
 document.onkeydown = e => {
   console.log(e.key);
+  setMsg('');
   if (e.key === 'Backspace') {
     currentTyped = currentTyped.slice(0, -1);
     updateAllBoxes();
@@ -221,7 +223,7 @@ function renderWordBoxes(container, word, totalLength) {
     const box = document.createElement('div');
     box.className = 'letter-box';
     box.textContent = word[i] ? word[i].toUpperCase() : '';
-    if (current == w) box.classList.append('completed');
+    if (startEl.value === targetEl.value) box.classList.add('completed');
     container.appendChild(box);
   }
 }
@@ -349,6 +351,7 @@ function setup(words) {
   renderHistory();
   renderInventory();
   setMsg('');
+  renderProgress();
   updateAllBoxes();
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
   console.log(localStorage.getItem('wordChainState'));
@@ -389,19 +392,17 @@ function renderProgress() {
     levelBtn.className = 'level-circle';
     levelBtn.textContent = lv.level;
 
+    if (index < currentLevelIndex) {
+      levelBtn.classList.add('completed');
+    }
+
     if (index === currentLevelIndex) {
-      levelBtn.classList.add('active');
+      if (currentStage === levels[currentLevelIndex].words.length - 1 && startEl.value === targetEl.value) levelBtn.classList.add('completed');
+      else levelBtn.classList.add('active');
     }
 
     levelDiv.appendChild(levelBtn);
     progressBar.appendChild(levelDiv);
-
-    // connector line
-    if (index < levels.length - 1) {
-      const connector = document.createElement('div');
-      connector.className = 'connector';
-      progressBar.appendChild(connector);
-    }
   }
 
   // initial stage dots
@@ -419,6 +420,12 @@ function renderStageDots(levelIndex) {
     const stage = document.createElement('div');
     stage.className = 'stage-dot';
     stage.textContent = si + 1;
+    if (si < currentStage) stage.classList.add('completed');
+    else if (si === currentStage)
+    {
+      if (startEl.value === targetEl.value) stage.classList.add('completed');
+      else stage.classList.add('active');
+    }
     stagesDiv.appendChild(stage);
   }
 
@@ -426,13 +433,7 @@ function renderStageDots(levelIndex) {
 }
 
 function highlightProgress(index) {
-  if (startEl.value === targetEl.value) return;
-  document.querySelectorAll('.level-circle').forEach((el, i) => {
-    el.classList.toggle('active', i === index);
-  });
-  document.querySelectorAll('.stage-dot').forEach((el, i) => {
-    el.classList.toggle('active', i === currentStage);
-  });
+  return;
 }
 
 function loadGameState() {
@@ -457,8 +458,8 @@ function loadGameState() {
     renderHistory();
     renderInventory();
     renderProgress();
-    highlightProgress(currentLevelIndex);
     updateAllBoxes();
+    setMsg('');
     return true;
   }
   catch (err) {

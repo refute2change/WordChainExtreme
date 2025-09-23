@@ -204,6 +204,11 @@ button:disabled { background: #94a3b8; color: #fff; }
   user-select: none;
 }
 
+.letter-box.completed {
+  background: #8ae696;
+  font-size: 0px;
+}
+
 #startWord, #targetWord {
   display: none;
 }
@@ -220,8 +225,8 @@ button:disabled { background: #94a3b8; color: #fff; }
 #progressBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin: 20px auto;
+  justify-content: center;
+  margin: 0px auto;
   max-width: 900px;
 }
 
@@ -270,7 +275,7 @@ button:disabled { background: #94a3b8; color: #fff; }
 #stageContainer {
   display: flex;
   justify-content: center;
-  margin: 20px auto;
+  margin: 0px auto;
 }
 
 .stage-row {
@@ -280,14 +285,14 @@ button:disabled { background: #94a3b8; color: #fff; }
 }
 
 .stage-dot {
-  width: 14px;
-  height: 14px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
   background: #777;
   font-size: 10px;
   color: #111;
   text-align: center;
-  line-height: 14px;
+  line-height: 24.6px;
 }
 
 .stage-dot.active {
