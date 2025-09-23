@@ -441,9 +441,11 @@ function loadGameState() {
     history = state.history || [];
     historyString = state.historyString || '↪';
     inventory = state.inventory || {};
-    startEl.value = history[history.length - 1] || '';
+    current = history[history.length - 1] || '';
+    startEl.value = current;
     targetEl.value = levels[currentLevelIndex].words[currentStage].target;
     currentTyped = '';
+    lengthOfWord = current.length;
     renderHistory();
     renderInventory();
     renderProgress();
