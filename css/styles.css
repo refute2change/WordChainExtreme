@@ -267,6 +267,12 @@ button:disabled { background: #94a3b8; color: #fff; }
   background: #555;
 }
 
+#stageContainer {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+}
+
 .stage-row {
   display: flex;
   gap: 4px;

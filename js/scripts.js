@@ -24,6 +24,7 @@ let levels = []; //
 let historyString = '↪'; //
 let currentStage = 0; //
 const progressBar = document.getElementById('progressBar');
+const stageContainer = document.getElementById('stageContainer');
 let currentLevelIndex = 0; //
 let lengthOfWord;
 let currentTotalStage = 0; //
@@ -220,6 +221,7 @@ function renderWordBoxes(container, word, totalLength) {
     const box = document.createElement('div');
     box.className = 'letter-box';
     box.textContent = word[i] ? word[i].toUpperCase() : '';
+    if (current == w) box.classList.append('completed');
     container.appendChild(box);
   }
 }
@@ -373,7 +375,6 @@ function createState() {
   };
 }
 
-
 function renderProgress() {
   progressBar.innerHTML = '';
 
@@ -388,43 +389,40 @@ function renderProgress() {
     levelBtn.className = 'level-circle';
     levelBtn.textContent = lv.level;
 
-    // highlight active level
     if (index === currentLevelIndex) {
       levelBtn.classList.add('active');
     }
 
-    levelBtn.onclick = () => {
-      currentLevelIndex = index;
-      loadLevel(index);
-      renderProgress(); // re-render to show stage dots for the new active level
-    };
-
     levelDiv.appendChild(levelBtn);
-
-    // only show stage dots for the active level
-    if (index === currentLevelIndex) {
-      const stagesDiv = document.createElement('div');
-      stagesDiv.className = 'stage-row';
-
-      for (let si = 0; si < lv.stages.length; si++) {
-        const stage = document.createElement('div');
-        stage.className = 'stage-dot';
-        stage.textContent = si + 1;
-        stagesDiv.appendChild(stage);
-      }
-
-      levelDiv.appendChild(stagesDiv);
-    }
-
     progressBar.appendChild(levelDiv);
 
-    // add connector line except after last
+    // connector line
     if (index < levels.length - 1) {
       const connector = document.createElement('div');
       connector.className = 'connector';
       progressBar.appendChild(connector);
     }
   }
+
+  // initial stage dots
+  renderStageDots(currentLevelIndex);
+}
+
+function renderStageDots(levelIndex) {
+  stageContainer.innerHTML = '';
+
+  const lv = levels[levelIndex];
+  const stagesDiv = document.createElement('div');
+  stagesDiv.className = 'stage-row';
+
+  for (let si = 0; si < lv.words.length; si++) {
+    const stage = document.createElement('div');
+    stage.className = 'stage-dot';
+    stage.textContent = si + 1;
+    stagesDiv.appendChild(stage);
+  }
+
+  stageContainer.appendChild(stagesDiv);
 }
 
 function highlightProgress(index) {
@@ -433,7 +431,7 @@ function highlightProgress(index) {
     el.classList.toggle('active', i === index);
   });
   document.querySelectorAll('.stage-dot').forEach((el, i) => {
-    el.classList.toggle('active', i === currentTotalStage && i === totalStages);
+    el.classList.toggle('active', i === currentStage);
   });
 }
 
