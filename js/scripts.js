@@ -21,6 +21,7 @@ const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
 let currentTyped = '';
 let levels = []; //
+let wordsused = {3: [], 4: [], 5: []};
 let historyString = '↪'; //
 let currentStage = 0; //
 const progressBar = document.getElementById('progressBar');
@@ -191,10 +192,12 @@ async function playMove() {
   history.push(w);
   historyString += cost;
   startEl.value = w;
-
+  wordsused[lengthOfWord].append(w);
   currentTyped = '';
-  
   nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
+
+  console.log(wordsused);
+
   renderHistory();
   renderInventory();
   updateAllBoxes();
@@ -347,6 +350,7 @@ function setup(words) {
   startEl.value = words.start;
   targetEl.value = words.target;
   lengthOfWord = words.start.length;
+  wordsused[lengthOfWord].append(startEl.value);
   current = words.start;
   history = [current];
   historyString = '↪';
@@ -391,7 +395,8 @@ function createState() {
     LevelsCompleted,
     history,
     historyString,
-    inventory
+    inventory,
+    wordsused
   };
 }
 
@@ -466,6 +471,7 @@ function loadGameState() {
     LevelsCompleted = state.LevelsCompleted || 0;
     history = state.history || [];
     historyString = state.historyString || '↪';
+    wordsused = state.wordsused;
     inventory = state.inventory || {};
     current = history[history.length - 1] || '';
     startEl.value = current;
