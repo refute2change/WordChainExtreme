@@ -86,16 +86,16 @@ function renderInventory() {
     rowDiv.className = 'inv-row';
 
     for (const letter of row) {
-      if (letter === 'Z')
-      {
-        const invnextBtn = document.createElement('button');
-        invnextBtn.setAttribute('id', 'nextBtn');
-        invnextBtn.className = 'inv-btn action-btn';
-        invnextBtn.innerHTML = `<div class="letter"></div><div class="count">next</div>`;
-        invnextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
-        invnextBtn.onclick = goNext; // call your existing reset function
-        rowDiv.appendChild(invnextBtn);
-      }
+      // if (letter === 'Z')
+      // {
+      //   const invnextBtn = document.createElement('button');
+      //   invnextBtn.setAttribute('id', 'nextBtn');
+      //   invnextBtn.className = 'inv-btn action-btn';
+      //   invnextBtn.innerHTML = `<div class="letter"></div><div class="count">next</div>`;
+      //   invnextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
+      //   invnextBtn.onclick = goNext; // call your existing reset function
+      //   rowDiv.appendChild(invnextBtn);
+      // }
       const count = inventory[letter] ?? 0;
 
       const btn = document.createElement('button');
@@ -189,7 +189,7 @@ async function playMove() {
   historyString += cost;
   startEl.value = w;
   currentTyped = '';
-  console.log(nextBtn.disabled);
+  nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
 
   renderHistory();
   renderInventory();
