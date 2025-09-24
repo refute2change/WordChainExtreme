@@ -40,7 +40,7 @@ for (let i = 65; i <= 90; i++) {
   inventory[String.fromCharCode(i)] = 0;
 }
 const nextBtn = document.createElement('button');
-nextBtn.setAttribute('id', 'nextBtn');
+nextBtn.setAttribute('id', 'secondnextBtn');
 nextBtn.className = 'action-btn';
 nextBtn.innerHTML = `<div class="count">next</div>`;
 nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
@@ -55,8 +55,6 @@ buttonTray.appendChild(resetBtn);
 let word1, word2;
 
 function goNext() {
-  const nextBtn = document.getElementById('nextBtn');
-  if (nextBtn.disabled) return;
   currentTotalStage++;
   currentStage++;
   if (currentStage == levelconstraints[currentLevelIndex].stages.length && currentLevelIndex < levels.length - 1) {
@@ -88,16 +86,16 @@ function renderInventory() {
     rowDiv.className = 'inv-row';
 
     for (const letter of row) {
-      // if (letter === 'Z')
-      // {
-      //   const nextBtn = document.createElement('button');
-      //   nextBtn.setAttribute('id', 'nextBtn');
-      //   nextBtn.className = 'inv-btn action-btn';
-      //   nextBtn.innerHTML = `<div class="letter"></div><div class="count">next</div>`;
-      //   nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
-      //   nextBtn.onclick = goNext; // call your existing reset function
-      //   rowDiv.appendChild(nextBtn);
-      // }
+      if (letter === 'Z')
+      {
+        const invnextBtn = document.createElement('button');
+        invnextBtn.setAttribute('id', 'nextBtn');
+        invnextBtn.className = 'inv-btn action-btn';
+        invnextBtn.innerHTML = `<div class="letter"></div><div class="count">next</div>`;
+        invnextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
+        invnextBtn.onclick = goNext; // call your existing reset function
+        rowDiv.appendChild(invnextBtn);
+      }
       const count = inventory[letter] ?? 0;
 
       const btn = document.createElement('button');
