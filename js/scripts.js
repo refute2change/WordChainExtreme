@@ -88,16 +88,16 @@ function renderInventory() {
     rowDiv.className = 'inv-row';
 
     for (const letter of row) {
-      if (letter === 'Z')
-      {
-        const nextBtn = document.createElement('button');
-        nextBtn.setAttribute('id', 'nextBtn');
-        nextBtn.className = 'inv-btn action-btn';
-        nextBtn.innerHTML = `<div class="letter"></div><div class="count">next</div>`;
-        nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
-        nextBtn.onclick = goNext; // call your existing reset function
-        rowDiv.appendChild(nextBtn);
-      }
+      // if (letter === 'Z')
+      // {
+      //   const nextBtn = document.createElement('button');
+      //   nextBtn.setAttribute('id', 'nextBtn');
+      //   nextBtn.className = 'inv-btn action-btn';
+      //   nextBtn.innerHTML = `<div class="letter"></div><div class="count">next</div>`;
+      //   nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
+      //   nextBtn.onclick = goNext; // call your existing reset function
+      //   rowDiv.appendChild(nextBtn);
+      // }
       const count = inventory[letter] ?? 0;
 
       const btn = document.createElement('button');
@@ -190,8 +190,9 @@ async function playMove() {
   history.push(w);
   historyString += cost;
   startEl.value = w;
-
   currentTyped = '';
+  console.log(nextBtn.disabled);
+
   renderHistory();
   renderInventory();
   updateAllBoxes();
