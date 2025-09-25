@@ -292,6 +292,7 @@ async function createLevels()
   currentTotalStage = 0; //
   totalStages = 0; //
   LevelsCompleted = 0; //
+  wordsused = {3:[], 4:[], 5:[]};
   const res = await fetch('answerscompartments.json');
   const groups = await res.json();
   levels = [];
