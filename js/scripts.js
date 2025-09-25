@@ -192,7 +192,7 @@ async function playMove() {
   history.push(w);
   historyString += cost;
   startEl.value = w;
-  wordsused[lengthOfWord].append(w);
+  wordsused[lengthOfWord].push(w);
   currentTyped = '';
   nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
 
@@ -351,7 +351,7 @@ function setup(words) {
   startEl.value = words.start;
   targetEl.value = words.target;
   lengthOfWord = words.start.length;
-  wordsused[lengthOfWord].append(startEl.value);
+  wordsused[lengthOfWord].push(startEl.value);
   current = words.start;
   history = [current];
   historyString = '↪';
