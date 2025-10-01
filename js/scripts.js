@@ -509,7 +509,7 @@ function loadGameState() {
 }
 
 async function fullReset() {
-  resetBtn.disabled = true;
+  nextBtn.disabled = true;
   await createLevels();
   loadLevel();
 }
