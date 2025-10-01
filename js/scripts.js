@@ -202,6 +202,7 @@ async function playMove() {
   renderInventory();
   updateAllBoxes();
   renderProgress();
+  renderUsedWords();
   
   if (w === targetEl.value) {
     totalStages++;
@@ -236,6 +237,17 @@ document.onkeydown = e => {
     updateAllBoxes();
   }
 };
+
+function renderUsedWords() {
+  const wordsUsedEl = document.getElementById('wordsUsed');
+  wordsUsedEl.innerHTML = '';
+  const usedWords = wordsused[lengthOfWord] || [];
+  usedWords.forEach(word => {
+    const li = document.createElement('li');
+    li.textContent = word.toUpperCase();
+    wordsUsedEl.appendChild(li);
+  });
+}
 
 function renderWordBoxes(container, word, totalLength) {
   container.innerHTML = '';
@@ -337,6 +349,7 @@ async function chooseWords() {
   renderInventory();
   setMsg('');
   updateAllBoxes();
+  renderUsedWords();
 }
 
 function handleReset() {
@@ -375,6 +388,7 @@ function setup(words) {
   setMsg('');
   renderProgress();
   updateAllBoxes();
+  renderUsedWords();
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
   console.log(localStorage.getItem('wordChainState'));
 }
@@ -484,6 +498,7 @@ function loadGameState() {
     renderProgress();
     updateAllBoxes();
     setMsg('');
+    renderUsedWords();
     return true;
   }
   catch (err) {
