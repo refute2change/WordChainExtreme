@@ -21,6 +21,7 @@ const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
 let currentTyped = '';
 let levels = []; //
+let restrictedWords = [];
 let wordsused = {3: [], 4: [], 5: []};
 let historyString = '↪'; //
 let currentStage = 0; //
@@ -183,7 +184,7 @@ async function playMove() {
 
   if (!oneLetterDiff(current, w)) return setMsg('Must change exactly 1 letter.');
   if (history.includes(w)) return setMsg('Already used.');
-
+  if (restrictedWords.includes(w)) return setMsg('Word is reserved for future uses, please take another path.');
   const cost = getChangedLetter(current, w);
   if (!inventory[cost] || inventory[cost] <= 0) return setMsg(`No ${cost}s left.`);
 
@@ -292,6 +293,10 @@ function pickWords(groups, len) {
     i2 = Math.floor(Math.random() * list.length);
   } while (i2 === i1);
 
+  if (restrictedWords.includes(list[i1]) || restrictedWords.includes(list[i2])) {
+    return pickWords(groups, len); // try again
+  }
+
   word1 = list[i1];
   word2 = list[i2];
   console.log(`Chosen words:`, word1, word2);
@@ -305,6 +310,7 @@ async function createLevels()
   currentTotalStage = 0; //
   totalStages = 0; //
   LevelsCompleted = 0; //
+  restrictedWords = [];
   wordsused = {3:[], 4:[], 5:[]};
   const res = await fetch('answerscompartments.json');
   const groups = await res.json();
@@ -317,6 +323,8 @@ async function createLevels()
     for (const stageLen of lvl.stages)
     {
       const res = pickWords(groups, stageLen);
+      restrictedWords.push(res.start);
+      restrictedWords.push(res.target);
       words.push(res);
     }
     levels.push({level: i, words: words});
@@ -500,6 +508,12 @@ function loadGameState() {
     updateAllBoxes();
     setMsg('');
     renderUsedWords();
+    for (const key in levels) {
+      for (const words in levels[key].words) {
+        restrictedWords.push(words.start);
+        restrictedWords.push(words.target);
+      }
+    }
     return true;
   }
   catch (err) {
