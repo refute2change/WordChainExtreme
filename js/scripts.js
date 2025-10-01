@@ -243,9 +243,10 @@ function renderUsedWords() {
   wordsUsedEl.innerHTML = '';
   const usedWords = wordsused[lengthOfWord] || [];
   usedWords.forEach(word => {
-    const li = document.createElement('li');
-    li.textContent = word.toUpperCase();
-    wordsUsedEl.appendChild(li);
+    const div = document.createElement('div');
+    div.className = 'used-word-item';
+    div.textContent = word;
+    wordsUsedEl.appendChild(div);
   });
 }
 

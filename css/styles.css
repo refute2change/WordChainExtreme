@@ -183,6 +183,25 @@ button:disabled { background: #94a3b8; color: #fff; }
   gap: 8px;
 }
 
+.used-word-item {
+  padding: 6px 10px;
+  background: #232323;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Itim', cursive;
+  margin-bottom: 2px;
+  border: 1px solid #333;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: background 0.2s;
+  cursor: default;
+  word-break: break-word;
+}
+
+.used-word-item:hover {
+  background: #2c2c2c;
+}
+
 .inv-btn .letter {
   font-size: 20px;
   font-family: 'Itim', cursive;
