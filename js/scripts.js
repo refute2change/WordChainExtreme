@@ -390,8 +390,8 @@ async function pickWords(groups, len, potentialunused) {
   word2 = list[i2];
 
   const resWords = await fetch('legalanswers.json');
-  const groups = await resWords.json();
-  const wordList = groups[len];
+  const altgroups = await resWords.json();
+  const wordList = altgroups[len];
 
   let index1 = wordList.indexOf(word1);
   let index2 = wordList.indexOf(word2);
