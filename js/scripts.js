@@ -396,7 +396,8 @@ async function pickWords(groups, len, potentialunused) {
   let index1 = wordList.indexOf(word1);
   let index2 = wordList.indexOf(word2);
 
-  if (existsWordChainByIndex(index1, index2, potentialunused, len)) {
+  const exists = await existsWordChainByIndex(index1, index2, potentialunused, len);
+  if (!exists) {
     return pickWords(groups, len, potentialunused); // try again
   }
 
