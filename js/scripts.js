@@ -328,7 +328,7 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len)
 
   const visited = new Set();
   // Each queue item: { idx, path }
-  const queue = [{ idx: startIdx, path: [wordList[startIdx]] }];
+  const queue = [{ idx: startIdx, path: [startIdx] }];
   visited.add(startIdx);
 
   let i;
@@ -344,11 +344,11 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len)
       if (usedSet.has(neighbor)) continue;
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
-        queue.push({ idx: neighbor, path: [...path, wordList[neighbor]] });
+        queue.push({ idx: neighbor, path: [...path, neighbor] });
       }
     }
   }
-  return false;
+  return [];
 }
 
 async function pickWords(groups, len, potentialunused) {
@@ -397,14 +397,15 @@ async function pickWords(groups, len, potentialunused) {
   let index2 = wordList.indexOf(word2);
 
   const exists = await existsWordChainByIndex(index1, index2, potentialunused, len);
-  if (!exists) {
-    return pickWords(groups, len, potentialunused); // try again
+  console.log(exists);
+  if (!exists.length) {
+    return await pickWords(groups, len, potentialunused); // try again
   }
 
   word1 = list[i1];
   word2 = list[i2];
   console.log(`Chosen words:`, word1, word2);
-  return {"start": word1, "target": word2, "chain": existsWordChainByIndex(i1, i2, potentialunused, len)};
+  return {"start": word1, "target": word2, "chain": exists};
 }
 
 async function createLevels()
@@ -427,7 +428,7 @@ async function createLevels()
     let words = [];
     for (const stageLen of lvl.stages)
     {
-      let res = pickWords(groups, stageLen, potentialunused[stageLen]);
+      let res = await pickWords(groups, stageLen, potentialunused[stageLen]);
       restrictedWords.push(res.start);
       restrictedWords.push(res.target);
       for (const w of res.chain) potentialunused[stageLen].push(w);
