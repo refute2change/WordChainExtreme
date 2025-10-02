@@ -351,7 +351,7 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len)
   return false;
 }
 
-function pickWords(groups, len, potentialunused) {
+async function pickWords(groups, len, potentialunused) {
   const templist = groups[len];
 
   let index;
@@ -386,8 +386,17 @@ function pickWords(groups, len, potentialunused) {
 
   // Note: You must update the pickWords function definition to be async:
   // async function pickWords(groups, len, potentialunused) { ... }
+  word1 = list[i1];
+  word2 = list[i2];
 
-  if (existsWordChainByIndex(i1, i2, potentialunused, len)) {
+  const resWords = await fetch('legalanswers.json');
+  const groups = await resWords.json();
+  const wordList = groups[len];
+
+  let index1 = wordList.indexOf(word1);
+  let index2 = wordList.indexOf(word2);
+
+  if (existsWordChainByIndex(index1, index2, potentialunused, len)) {
     return pickWords(groups, len, potentialunused); // try again
   }
 
@@ -423,6 +432,7 @@ async function createLevels()
       potentialunused[stageLen].push(...res.chain);
       res = {"start": res.start, "target": res.target};
       words.push(res);
+      console.log(`Level ${i} Stage with length ${stageLen} is done.`);
     }
     levels.push({level: i, words: words});
   }
