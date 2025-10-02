@@ -430,7 +430,7 @@ async function createLevels()
       let res = pickWords(groups, stageLen, potentialunused[stageLen]);
       restrictedWords.push(res.start);
       restrictedWords.push(res.target);
-      for (const w of res.chain) restrictedWords.push(w);
+      for (const w of res.chain) potentialunused[stageLen].push(w);
       res = {"start": res.start, "target": res.target};
       words.push(res);
       console.log(`Level ${i} Stage with length ${stageLen} is done.`);
