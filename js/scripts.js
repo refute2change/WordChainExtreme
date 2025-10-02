@@ -164,6 +164,46 @@ function getChangedLetter(a, b) {
   return null;
 }
 
+async function existsWordChain(startWord, targetWord) {
+  // Load legalanswers.json for word list
+  const resWords = await fetch('legalanswers.json');
+  const groups = await resWords.json();
+  const len = startWord.length;
+  const wordList = groups[len];
+  const wordToIndex = {};
+  let i;
+  wordList.forEach((w, i) => { wordToIndex[w] = i; });
+
+  // Load adjacency list (already as list of indices)
+  const resAdj = await fetch('legalanswersedgelist.json');
+  const adjList1 = await resAdj.json(); // adjList[i] = [neighbors]
+  const adjList = adjList1[len]; // get for specific length
+
+  const startIdx = wordToIndex[startWord];
+  const targetIdx = wordToIndex[targetWord];
+  if (startIdx === undefined || targetIdx === undefined) return false;
+
+  // BFS
+  const visited = new Set();
+  const queue = [startIdx];
+  visited.add(startIdx);
+
+  while (queue.length) {
+    const curr = queue.shift();
+    if (curr === targetIdx) return true;
+    for (const neighbor of adjList[curr]) {
+      i = wordList[neighbor];
+      if (wordsused[len].includes(i)) continue; // skip used words
+      if (restrictedWords.includes(i)) continue; // skip restricted words
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        queue.push(neighbor);
+      }
+    }
+  }
+  return false;
+}
+
 async function playMove() {
   const w = currentTyped.trim().toLowerCase();
   if (!w) return setMsg('Type a word first.');
@@ -189,6 +229,7 @@ async function playMove() {
   const cost = getChangedLetter(current, w);
   if (!inventory[cost] || inventory[cost] <= 0) return setMsg(`No ${cost}s left.`);
 
+  console.log(existsWordChain(w, targetEl.value));
   inventory[cost]--;
   current = w;
   history.push(w);
