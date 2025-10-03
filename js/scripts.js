@@ -225,7 +225,7 @@ async function playMove() {
   if (!oneLetterDiff(current, w)) return setMsg('Must change exactly 1 letter.');
   if (history.includes(w)) return setMsg('Already used.');
   if (wordsused[lengthOfWord].includes(w)) return setMsg('Already used.');
-  if (restrictedWords.includes(w)) return setMsg('Word is reserved for future uses, please take another path.');
+  if (restrictedWords.includes(w) && w !== targetEl.value) return setMsg('Word is reserved for future uses, please take another path.');
   const cost = getChangedLetter(current, w);
   if (!inventory[cost] || inventory[cost] <= 0) return setMsg(`No ${cost}s left.`);
 
