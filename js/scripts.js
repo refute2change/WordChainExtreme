@@ -392,7 +392,7 @@ async function pickWords(groups, len, potentialunused, minLen) {
   } while (i2 === i1);
 
   if (restrictedWords.includes(list[i1]) || restrictedWords.includes(list[i2])) {
-    return await pickWords(groups, len, potentialunused, minLen); // try again
+    return {"start": "", "target": "", "chain": []};
   }
 
   // existsWordChainByIndex is async, so we need to await its result
@@ -419,7 +419,7 @@ async function pickWords(groups, len, potentialunused, minLen) {
   const exists = await existsWordChainByIndex(index1, index2, potentialunused, len, minLen);
   console.log(exists);
   if (!exists.length) {
-    return await pickWords(groups, len, potentialunused, minLen); // try again
+    return {"start": "", "target": "", "chain": []};
   }
 
   word1 = list[i1];
@@ -446,10 +446,13 @@ async function createLevels()
   {
     i = lvl.level;
     let words = [];
+    let res;
     for (let j = 0; j < lvl.stages.length; j++)
     {
       const stageLen = lvl.stages[j];
-      let res = await pickWords(groups, stageLen, potentialunused[stageLen], minimumLength[i-1].stages[j] + 1);
+      do {
+        res = await pickWords(groups, stageLen, potentialunused[stageLen], minimumLength[i-1].stages[j] + 1);
+      } while (!res.chain.length);
       restrictedWords.push(res.start);
       restrictedWords.push(res.target);
       for (const w of res.chain) potentialunused[stageLen].push(w);
