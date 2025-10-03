@@ -335,7 +335,7 @@ function updateAllBoxes() {
 startEl.addEventListener('input', updateAllBoxes);
 targetEl.addEventListener('input', updateAllBoxes);
 
-async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len, minLen = len) {
+async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len, minLen) {
   const resWords = await fetch('legalanswers.json');
   const groups = await resWords.json();
   const wordList = groups[len];
@@ -371,7 +371,7 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len,
   return [];
 }
 
-async function pickWords(groups, len, potentialunused, minLen = len) {
+async function pickWords(groups, len, potentialunused, minLen) {
   const templist = groups[len];
 
   let index;
@@ -392,7 +392,7 @@ async function pickWords(groups, len, potentialunused, minLen = len) {
   } while (i2 === i1);
 
   if (restrictedWords.includes(list[i1]) || restrictedWords.includes(list[i2])) {
-    return pickWords(groups, len); // try again
+    return await pickWords(groups, len, potentialunused, minLen); // try again
   }
 
   // existsWordChainByIndex is async, so we need to await its result
@@ -419,7 +419,7 @@ async function pickWords(groups, len, potentialunused, minLen = len) {
   const exists = await existsWordChainByIndex(index1, index2, potentialunused, len, minLen);
   console.log(exists);
   if (!exists.length) {
-    return await pickWords(groups, len, potentialunused); // try again
+    return await pickWords(groups, len, potentialunused, minLen); // try again
   }
 
   word1 = list[i1];
@@ -449,7 +449,7 @@ async function createLevels()
     for (let j = 0; j < lvl.stages.length; j++)
     {
       const stageLen = lvl.stages[j];
-      let res = await pickWords(groups, stageLen, potentialunused[stageLen], minimumLength[i-1].stages[j]);
+      let res = await pickWords(groups, stageLen, potentialunused[stageLen], minimumLength[i-1].stages[j] + 1);
       restrictedWords.push(res.start);
       restrictedWords.push(res.target);
       for (const w of res.chain) potentialunused[stageLen].push(w);
