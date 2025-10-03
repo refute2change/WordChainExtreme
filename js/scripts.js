@@ -8,6 +8,10 @@ const levelconstraints = [{level:1, stages: [3]}, {level:2, stages: [3, 3]}, {le
                           {level:4, stages: [3, 4]}, {level:5, stages: [3, 4, 4]}, {level:6, stages: [4, 4, 4, 4]},
                           {level:7, stages: [5, 5]}, {level:8, stages: [4, 5, 4, 5]}, {level:9, stages: [3, 3, 4, 4, 5, 5]}];
 
+const minimumLength = [{level:1, stages: [3]}, {level:2, stages: [3, 4]}, {level:3, stages: [4, 5, 6]},
+                      {level:4, stages: [5, 4]}, {level:5, stages: [5, 5, 5]}, {level:6, stages: [4, 5, 6, 7]},
+                      {level:7, stages: [5, 6]}, {level:8, stages: [5, 6, 6, 7]}, {level:9, stages: [6, 6, 7, 8, 9, 10]}];
+
 // DOM elements
 const startEl = document.getElementById('startWord');
 const targetEl = document.getElementById('targetWord');
@@ -331,7 +335,7 @@ function updateAllBoxes() {
 startEl.addEventListener('input', updateAllBoxes);
 targetEl.addEventListener('input', updateAllBoxes);
 
-async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len) {
+async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len, minLen = len) {
   const resWords = await fetch('legalanswers.json');
   const groups = await resWords.json();
   const wordList = groups[len];
@@ -350,7 +354,7 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len)
   let i;
   while (queue.length) {
     const { idx: curr, path } = queue.shift();
-    if (curr === targetIdx && path.length >= len) {
+    if (curr === targetIdx && path.length >= minLen) {
       // You can return path here if you want the chain
       return path;
     }
@@ -367,7 +371,7 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len)
   return [];
 }
 
-async function pickWords(groups, len, potentialunused) {
+async function pickWords(groups, len, potentialunused, minLen = len) {
   const templist = groups[len];
 
   let index;
@@ -412,7 +416,7 @@ async function pickWords(groups, len, potentialunused) {
   let index1 = wordList.indexOf(word1);
   let index2 = wordList.indexOf(word2);
 
-  const exists = await existsWordChainByIndex(index1, index2, potentialunused, len);
+  const exists = await existsWordChainByIndex(index1, index2, potentialunused, len, minLen);
   console.log(exists);
   if (!exists.length) {
     return await pickWords(groups, len, potentialunused); // try again
@@ -442,9 +446,10 @@ async function createLevels()
   {
     i = lvl.level;
     let words = [];
-    for (const stageLen of lvl.stages)
+    for (let j = 0; j < lvl.stages.length; j++)
     {
-      let res = await pickWords(groups, stageLen, potentialunused[stageLen]);
+      const stageLen = lvl.stages[j];
+      let res = await pickWords(groups, stageLen, potentialunused[stageLen], minimumLength[i-1].stages[j]);
       restrictedWords.push(res.start);
       restrictedWords.push(res.target);
       for (const w of res.chain) potentialunused[stageLen].push(w);
