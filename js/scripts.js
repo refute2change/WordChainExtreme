@@ -34,6 +34,7 @@ let lengthOfWord;
 let currentTotalStage = 0; //
 let totalStages = 0; //
 let LevelsCompleted = 0; //
+let wayout = true; //
 
 // game state
 let current = startEl.value;
@@ -241,7 +242,7 @@ async function playMove() {
   nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
 
   console.log(wordsused);
-  const wayout = await existsWordChain(w, targetEl.value);
+  wayout = await existsWordChain(w, targetEl.value);
 
   renderHistory();
   renderInventory();
@@ -253,6 +254,7 @@ async function playMove() {
     totalStages++;
     if (currentStage === levelconstraints[currentLevelIndex].stages.length - 1) {
       LevelsCompleted++;
+      finished = true;
     }
     setMsg('🎉 Reached target!');
   }
@@ -309,7 +311,7 @@ function renderWordBoxes(container, word, totalLength) {
     const box = document.createElement('div');
     box.className = 'letter-box';
     box.textContent = word[i] ? word[i].toUpperCase() : '';
-    if (wayout)
+    if (finished)
     {
       if (startEl.value === targetEl.value) box.classList.add('completed');
       else box.classList.add('failed');
@@ -605,7 +607,7 @@ function highlightProgress(index) {
   return;
 }
 
-function loadGameState() {
+async function loadGameState() {
   const savedState = localStorage.getItem('wordChainState');
   if (!savedState) return false;
   try {
@@ -638,6 +640,15 @@ function loadGameState() {
       }
     }
     if (startEl.value === targetEl.value) finished = true;
+    else
+    {
+      const wayout = await existsWordChain(current, targetEl.value);
+      if (!wayout) {
+        setMsg('⚠ No possible path from here, the game must be restarted.');
+        finished = true;
+        nextBtn.disabled = true;
+      }
+    }
     return true;
   }
   catch (err) {
@@ -653,7 +664,7 @@ async function fullReset() {
 }
 
 async function init() {
-  let loaded = loadGameState();
+  let loaded = await loadGameState();
   console.log(loaded);
   if (loaded) return;
   localStorage.removeItem('wordChainGame');
