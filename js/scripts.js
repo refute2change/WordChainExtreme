@@ -248,17 +248,11 @@ async function playMove() {
   console.log(wordsused);
   wayout = await existsWordChain(w, targetEl.value);
 
-  renderHistory();
-  renderInventory();
-  updateAllBoxes();
-  renderProgress();
-  renderUsedWords();
-  
   if (w === targetEl.value) {
     totalStages++;
+    finished = true;
     if (currentStage === levelconstraints[currentLevelIndex].stages.length - 1) {
       LevelsCompleted++;
-      finished = true;
     }
     setMsg('🎉 Reached target!');
   }
@@ -270,6 +264,14 @@ async function playMove() {
       nextBtn.disabled = true;
     }
   }
+
+  renderHistory();
+  renderInventory();
+  updateAllBoxes();
+  renderProgress();
+  renderUsedWords();
+  
+
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
   console.log(localStorage.getItem('wordChainState'));
 }
@@ -507,6 +509,7 @@ function setup(words) {
   targetEl.value = words.target;
   lengthOfWord = words.start.length;
   wordsused[lengthOfWord].push(startEl.value);
+  finished = false;
   current = words.start;
   history = [current];
   historyString = '↪';
@@ -635,6 +638,7 @@ async function loadGameState() {
     targetEl.value = levels[currentLevelIndex].words[currentStage].target;
     currentTyped = '';
     lengthOfWord = current.length;
+    nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
     renderHistory();
     renderInventory();
     renderProgress();
@@ -647,7 +651,9 @@ async function loadGameState() {
         restrictedWords.push(words.target);
       }
     }
-    if (startEl.value === targetEl.value) finished = true;
+    if (startEl.value === targetEl.value) {
+      finished = true;
+    }
     else
     {
       const wayout = await existsWordChain(current, targetEl.value);
