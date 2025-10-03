@@ -250,6 +250,11 @@ button:disabled { background: #94a3b8; color: #fff; }
   font-size: 0px;
 }
 
+.letter-box.failed {
+  background: #e67d7d;
+  font-size: 0px;
+}
+
 #startWord, #targetWord {
   display: none;
 }

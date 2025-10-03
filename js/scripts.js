@@ -21,6 +21,7 @@ const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
 let currentTyped = '';
 let levels = []; //
+let finished = false;
 let restrictedWords = [];
 let wordsused = {3: [], 4: [], 5: []};
 let historyString = '↪'; //
@@ -194,7 +195,7 @@ async function existsWordChain(startWord, targetWord) {
     for (const neighbor of adjList[curr]) {
       i = wordList[neighbor];
       if (wordsused[len].includes(i)) continue; // skip used words
-      if (restrictedWords.includes(i)) continue; // skip restricted words
+      if (restrictedWords.includes(i) && i !== targetEl.value) continue; // skip restricted words
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
         queue.push(neighbor);
@@ -240,6 +241,7 @@ async function playMove() {
   nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
 
   console.log(wordsused);
+  const wayout = await existsWordChain(w, targetEl.value);
 
   renderHistory();
   renderInventory();
@@ -254,6 +256,14 @@ async function playMove() {
     }
     setMsg('🎉 Reached target!');
   }
+  else {
+    if (!wayout)
+    {
+      setMsg('⚠ No possible path from here, the game must be restarted.');
+      finished = true;
+      nextBtn.disabled = true;
+    }
+  }
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
   console.log(localStorage.getItem('wordChainState'));
 }
@@ -261,7 +271,7 @@ async function playMove() {
 function setMsg(t) { msgEl.textContent = t; }
 
 document.onkeydown = e => {
-  console.log(e.key);
+  if (startEl.value === targetEl.value) return;
   setMsg('');
   if (e.key === 'Backspace') {
     currentTyped = currentTyped.slice(0, -1);
@@ -299,7 +309,11 @@ function renderWordBoxes(container, word, totalLength) {
     const box = document.createElement('div');
     box.className = 'letter-box';
     box.textContent = word[i] ? word[i].toUpperCase() : '';
-    if (startEl.value === targetEl.value) box.classList.add('completed');
+    if (wayout)
+    {
+      if (startEl.value === targetEl.value) box.classList.add('completed');
+      else box.classList.add('failed');
+    }
     container.appendChild(box);
   }
 }
@@ -623,6 +637,7 @@ function loadGameState() {
         restrictedWords.push(words.target);
       }
     }
+    if (startEl.value === targetEl.value) finished = true;
     return true;
   }
   catch (err) {
