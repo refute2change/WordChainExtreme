@@ -309,7 +309,7 @@ function renderUsedWords() {
   });
 }
 
-function renderWordBoxes(container, word, totalLength) {
+function renderWordBoxes(container, word, totalLength, mode = 0) {
   container.innerHTML = '';
   for (let i = 0; i < totalLength; i++) {
     const box = document.createElement('div');
@@ -320,14 +320,18 @@ function renderWordBoxes(container, word, totalLength) {
       if (startEl.value === targetEl.value) box.classList.add('completed');
       else box.classList.add('failed');
     }
+    else {
+      if (mode == -1) box.classList.add('current');
+      else if (mode == 1) box.classList.add('target');
+    }
     container.appendChild(box);
   }
 }
 
 function updateAllBoxes() {
   const len = parseInt(startEl.value.length, 10);
-  renderWordBoxes(startBoxes, startEl.value, len);
-  renderWordBoxes(targetBoxes, targetEl.value, len);
+  renderWordBoxes(startBoxes, startEl.value, len, mode = -1);
+  renderWordBoxes(targetBoxes, targetEl.value, len, mode = 1);
   renderWordBoxes(moveBoxes, currentTyped, len);
 }
 

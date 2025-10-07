@@ -11,15 +11,15 @@ body {
   background: #111;
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 0px 0px;
+  padding: 5px;
   color: #fff;
-  width: 900px;
+  width: 100%;
 }
-#gameWrapper {
+#gameContainer {
   display: flex;
   flex-direction: column;
   align-items: center; /* keeps everything centered */
-  width: 100%;
+  width: 900px;
   margin: 0 auto;
 }
 p {
@@ -174,12 +174,11 @@ button:disabled { background: #94a3b8; color: #fff; }
 /* the bar below */
 #wordsUsedContainer {
   background: #181818;
-  border-radius: 0 0 16px 16px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   color: #fff;
-  padding: 10px 12px;
-  width: 900px;
-  margin-top: -25px; /* pulls it close to the game box */
+  padding: 5px;
+  width: 100%;
+  margin-top: 0px; /* pulls it close to the game box */
 }
 
 #wordsUsed {
@@ -203,7 +202,7 @@ button:disabled { background: #94a3b8; color: #fff; }
 }
 
 #wordsUsed p {
-  margin: 0 0 6px;
+  margin: 0;
   font-weight: bold;
 }
 
@@ -249,7 +248,7 @@ button:disabled { background: #94a3b8; color: #fff; }
 .letter-box-row {
   display: flex;
   gap: 6px;
-  justify-content: left;
+  justify-content: center;
   margin: 10px 0;
 }
 
@@ -269,6 +268,14 @@ button:disabled { background: #94a3b8; color: #fff; }
   user-select: none;
 }
 
+.letter-box.current {
+  background: #78b6ed;
+}
+
+.letter-box.target {
+  background: #e9ab58;
+}
+
 .letter-box.completed {
   background: #8ae696;
   font-size: 0px;
@@ -285,16 +292,21 @@ button:disabled { background: #94a3b8; color: #fff; }
 
 /* 📱 Mobile: make keys bigger */
 @media (max-width: 768px) {
-  .inv-btn {
+  /* .inv-btn {
     width: 30px;
     height: 45px;
     font-size: 18px;
-  }
+  } */
 
   .letter-box {
     width: 35px;
     height: 35px;
   }
+
+  #gameContainer {
+    width: 100%
+  }
+
 }
 
 #progressBar {
