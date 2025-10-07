@@ -83,7 +83,7 @@ function renderHistory() {
   history.forEach(w => {
     const div = document.createElement('div');
     div.className = 'word-item';
-    div.innerHTML = `<div class="letter-box">${historyString[i]}</div>`;
+    div.innerHTML = `<div class="letter-box">${historyString[i]}</div><div>${w}</div>`;
     historyEl.appendChild(div);
     i++;
   });
