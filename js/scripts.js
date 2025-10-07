@@ -23,6 +23,8 @@ const wordLength = document.getElementById('wordLength');
 const moveBoxes = document.getElementById('moveBoxes');
 const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
+const repetitiveAssist = document.getElementById('assistToggle');
+console.log(repetitiveAssist.checked);
 let currentTyped = '';
 let levels = []; //
 let finished = false;

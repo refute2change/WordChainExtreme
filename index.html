@@ -51,9 +51,17 @@
         <div id="inventory"></div>
       </div>
     </div>
-    <div id = "wordsUsedContainer">
-      <h2>Words Used</h2>
-      <ul id="wordsUsed"></ul>
+    <div id="wordsUsedContainer">
+      <div class="words-used-header">
+        <p>Words Used</p>
+        <label class="switch">
+          <input type="checkbox" id="assistToggle">
+          <span class="slider"></span>
+          <span class="switch-label">Repetitive Assist</span>
+        </label>
+      </div>
+
+      <div id="wordsUsed"></div>
     </div>
   </div>
   <!-- <script src="wordHandling.js"></script> -->
