@@ -221,6 +221,11 @@ button:disabled { background: #94a3b8; color: #fff; }
   word-break: break-word;
 }
 
+.used-word-item.potential {
+  background: #de9191;
+  border-color: #555;
+}
+
 .used-word-item:hover {
   background: #2c2c2c;
 }
@@ -459,6 +464,6 @@ button:disabled { background: #94a3b8; color: #fff; }
   opacity: 0.9;
 }
 
-.switch-label.inactive {
+.inactive {
   opacity: 0.25;
 }

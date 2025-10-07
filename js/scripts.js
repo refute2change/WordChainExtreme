@@ -24,7 +24,13 @@ const moveBoxes = document.getElementById('moveBoxes');
 const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
 const repetitiveAssist = document.getElementById('assistToggle');
-console.log(repetitiveAssist.checked);
+const switchLabel = document.getElementById('assistLabel');
+if (repetitiveAssist.checked) switchLabel.classList.remove('inactive');
+else switchLabel.classList.add('inactive');
+repetitiveAssist.onchange = () => {
+  if (repetitiveAssist.checked) switchLabel.classList.remove('inactive');
+  else switchLabel.classList.add('inactive');
+}
 let currentTyped = '';
 let levels = []; //
 let finished = false;
