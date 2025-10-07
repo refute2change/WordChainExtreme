@@ -8,54 +8,56 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div class="container">
-    <div id="levelMenu"></div>
-    <h1>Word Chain — One letter at a time</h1>
-    <!-- <div>
-      <label for="mode">Gamemode:</label>
-      <select id="mode">
-        <option value="normal">Normal</option>
-        <option value="endless">Endless</option>
-    </div> -->
-    <div id = "progressBar">Hello</div>
-    <div id="stageContainer"></div>
-    <!-- <div class="row">
-      <label for="wordLength">Word Length:</label>
-      <select id="wordLength">
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-      </select>
-    </div> -->
-    <div class="row">
-      <div>
-        <input id="startWord" type="text" value="cat" readonly>
+  <div id="gameContainer">
+    <div class="container">
+      <div id="levelMenu"></div>
+      <h1>Word Chain — One letter at a time</h1>
+      <!-- <div>
+        <label for="mode">Gamemode:</label>
+        <select id="mode">
+          <option value="normal">Normal</option>
+          <option value="endless">Endless</option>
+      </div> -->
+      <div id = "progressBar">Hello</div>
+      <div id="stageContainer"></div>
+      <!-- <div class="row">
+        <label for="wordLength">Word Length:</label>
+        <select id="wordLength">
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+        </select>
+      </div> -->
+      <div class="row">
+        <div>
+          <input id="startWord" type="text" value="cat" readonly>
+        </div>
+        <div>
+          <input id="targetWord" type="text" value="dog" readonly>
+        </div>
       </div>
+      <!-- visual mirrors -->
       <div>
-        <input id="targetWord" type="text" value="dog" readonly>
+        <p>Start</p>
+        <div id="startBoxes" class="letter-box-row"></div>
+        <div id="moveBoxes" class="letter-box-row"></div>
+        <div id="targetBoxes" class="letter-box-row"></div>
+        <p>Target</p>
+        <div class="message" id="message"></div>
+      </div>
+      <div class="history" id="history"></div>
+      <div id = "buttons"></div>
+      <div>
+        <div id="inventory"></div>
       </div>
     </div>
-    <!-- visual mirrors -->
-    <div>
-      <p>Start</p>
-      <div id="startBoxes" class="letter-box-row"></div>
-      <div id="moveBoxes" class="letter-box-row"></div>
-      <div id="targetBoxes" class="letter-box-row"></div>
-      <p>Target</p>
-      <div class="message" id="message"></div>
+    <div id = "wordsUsedContainer">
+      <h2>Words Used</h2>
+      <ul id="wordsUsed"></ul>
     </div>
-    <div class="history" id="history"></div>
-    <div id = "buttons"></div>
-    <div>
-      <div id="inventory"></div>
-    </div>
-  </div>
-  <div id = "wordsUsedContainer">
-    <h2>Words Used</h2>
-    <ul id="wordsUsed"></ul>
   </div>
   <!-- <script src="wordHandling.js"></script> -->
   <script src="js/scripts.js"></script>

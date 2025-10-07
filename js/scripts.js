@@ -83,7 +83,7 @@ function renderHistory() {
   history.forEach(w => {
     const div = document.createElement('div');
     div.className = 'word-item';
-    div.innerHTML = `<div class="letter-box">${historyString[i]}</div><div>${w}</div>`;
+    div.innerHTML = `<div class="letter-box">${historyString[i]}</div>`;
     historyEl.appendChild(div);
     i++;
   });
@@ -115,7 +115,6 @@ function renderInventory() {
 
       btn.innerHTML = `
         <div class="letter">${letter}</div>
-        <div class="count">${count}</div>
       `;
 
       btn.onclick = () => {
@@ -135,7 +134,6 @@ function renderInventory() {
   back.className = 'inv-btn backspace-btn';
   back.innerHTML = `
     <div class="letter">←</div>
-    <div class="count">del</div>
   `;
   back.onclick = () => {
     currentTyped = currentTyped.slice(0, -1);
@@ -146,7 +144,7 @@ function renderInventory() {
     // ▶ Play
   const playBtn = document.createElement('button');
   playBtn.className = 'inv-btn action-btn';
-  playBtn.innerHTML = `<div class="letter">▶</div><div class="count">play</div>`;
+  playBtn.innerHTML = `<div class="letter">▶</div>`;
   playBtn.onclick = playMove; // call your existing play function
   invEl.lastElementChild.appendChild(playBtn);
 
