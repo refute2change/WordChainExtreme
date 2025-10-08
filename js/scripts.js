@@ -131,6 +131,7 @@ function renderInventory() {
         if (currentTyped.length >= current.length) return;
         currentTyped += letter.toLowerCase();
         updateAllBoxes();
+        renderAssist();
       };
 
       rowDiv.appendChild(btn);
@@ -148,6 +149,7 @@ function renderInventory() {
   back.onclick = () => {
     currentTyped = currentTyped.slice(0, -1);
     updateAllBoxes();
+    renderAssist();
   };
 
   invEl.lastElementChild.appendChild(back);
