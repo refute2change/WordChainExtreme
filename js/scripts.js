@@ -235,9 +235,9 @@ function renderAssist() {
     }
 
     for (const el of wordsUsedEl.children) {
-      el.classList.remove('potential', 'disappear', 'moving');
-      el.style.transition = '';
-      el.style.transform = '';
+      // el.classList.remove('potential', 'disappear', 'moving');
+      // el.style.transition = '';
+      // el.style.transform = '';
     }
     return;
   }
@@ -247,12 +247,12 @@ function renderAssist() {
   const nonPotential = [];
   for (const el of wordsUsedEl.children) {
     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
-      el.classList.add('potential');
-      el.classList.remove('disappear');
+      // el.classList.add('potential');
+      // el.classList.remove('disappear');
       potential.push(el);
     } else {
-      el.classList.remove('potential');
-      el.classList.add('disappear');
+      // el.classList.remove('potential');
+      // el.classList.add('disappear');
       nonPotential.push(el);
     }
   }
