@@ -74,14 +74,15 @@ buttonTray.appendChild(resetBtn);
 let word1, word2;
 
 function resetoriginalOrder() {
-  originalOrder = [];
-  const usedWords = wordsused[lengthOfWord] || [];
-  usedWords.forEach(word => {
-    const div = document.createElement('div');
-    div.className = 'used-word-item';
-    div.textContent = word;
-    originalOrder.push(div);
-  });
+  // originalOrder = [];
+  // const usedWords = wordsused[lengthOfWord] || [];
+  // usedWords.forEach(word => {
+  //   const div = document.createElement('div');
+  //   div.className = 'used-word-item';
+  //   div.textContent = word;
+  //   originalOrder.push(div);
+  // });
+  return;
 }
 
 function goNext() {
@@ -221,39 +222,23 @@ function renderInventory() {
 //   potentials.forEach(p => wordsUsedEl.prepend(p));
 // }
 
-
-
 function renderAssist() {
+  return;
   // Save the original order once
-  resetoriginalOrder();
+  if (originalOrder.length === 0) {
+    originalOrder = Array.from(wordsUsedEl.children);
+  }
 
   // --- Case 1: Assist off or no text typed ---
   if (!repetitiveAssist.checked || currentTyped.length === 0) {
     if (originalOrder.length > 0) {
       animateReorderBack(wordsUsedEl, originalOrder);
+    }
 
-      // Wait for all transitions to finish before changing classes
-      let finishedCount = 0;
-      const items = Array.from(wordsUsedEl.children);
-      const onTransitionEnd = () => {
-        finishedCount++;
-        if (finishedCount === items.length) {
-          for (const el of wordsUsedEl.children) {
-            el.classList.remove('potential', 'disappear', 'moving');
-            el.style.transition = '';
-            el.style.transform = '';
-          }
-        }
-      };
-      items.forEach(el => {
-        el.addEventListener('transitionend', onTransitionEnd, { once: true });
-      });
-    } else {
-      for (const el of wordsUsedEl.children) {
-        el.classList.remove('potential', 'disappear', 'moving');
-        el.style.transition = '';
-        el.style.transform = '';
-      }
+    for (const el of wordsUsedEl.children) {
+      el.classList.remove('potential', 'disappear', 'moving');
+      el.style.transition = '';
+      el.style.transform = '';
     }
     return;
   }
@@ -261,41 +246,52 @@ function renderAssist() {
   // --- Case 2: Assist on and something typed ---
   const potential = [];
   const nonPotential = [];
-  for (const el of originalOrder) {
+  for (const el of wordsUsedEl.children) {
     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
       potential.push(el);
     } else {
       nonPotential.push(el);
     }
   }
-  potential.reverse();
 
-  // Animate reorder first, then apply classes after transition
+  potential.reverse(); // prepend reverses order, so reverse first
+
   animateReorder(wordsUsedEl, potential);
 
-  // Wait for all transitions to finish before changing classes
-  let finishedCount = 0;
-  const items = Array.from(wordsUsedEl.children);
-  const onTransitionEnd = () => {
-    finishedCount++;
-    if (finishedCount === items.length) {
-      for (const el of originalOrder) {
-        if (el.textContent.startsWith(currentTyped.toLowerCase())) {
-          el.classList.add('potential');
-          el.classList.remove('disappear');
-        } else {
-          el.classList.remove('potential');
-          el.classList.add('disappear');
-        }
+  // Only update classes after animation finishes
+  setTimeout(() => {
+    for (const el of wordsUsedEl.children) {
+      if (el.textContent.startsWith(currentTyped.toLowerCase())) {
+        el.classList.add('potential');
+        el.classList.remove('disappear');
+        el.classList.add('moving');
+      } else {
+        el.classList.remove('potential');
+        el.classList.add('disappear');
         el.classList.remove('moving');
-        el.style.transition = '';
-        el.style.transform = '';
       }
+      el.style.transition = '';
+      el.style.transform = '';
     }
-  };
-  items.forEach(el => {
-    el.addEventListener('transitionend', onTransitionEnd, { once: true });
-  });
+  }, 1000); // match animation duration
+  // // --- Case 2: Assist on and something typed ---
+  // const potential = [];
+  // const nonPotential = [];
+  // for (const el of wordsUsedEl.children) {
+  //   if (el.textContent.startsWith(currentTyped.toLowerCase())) {
+  //     el.classList.add('potential');
+  //     el.classList.remove('disappear');
+  //     potential.push(el);
+  //   } else {
+  //     el.classList.remove('potential');
+  //     el.classList.add('disappear');
+  //     nonPotential.push(el);
+  //   }
+  // }
+
+  // potential.reverse(); // prepend reverses order, so reverse first
+
+  // animateReorder(wordsUsedEl, potential);
 }
 
 // ---- Smooth forward animation (bring potential to start) ----
@@ -323,7 +319,7 @@ function animateReorder(container, potentialList) {
       el.style.transition = 'none';
       el.getBoundingClientRect(); // force reflow
 
-      el.style.transition = 'transform 0.5s ease';
+      el.style.transition = 'transform 1s ease';
       el.style.transform = '';
 
       el.addEventListener('transitionend', () => {
@@ -335,7 +331,13 @@ function animateReorder(container, potentialList) {
 
 // ---- Smooth reverse animation (return to original order) ----
 function animateReorderBack(container, originalOrder) {
+
   const items = Array.from(container.children);
+
+  for (let el = 0; el < originalOrder.length; el++) {
+    console.log(items[el]);
+    console.log(originalOrder[el]);
+  }
 
   const firstRects = new Map(items.map(el => [el, el.getBoundingClientRect()]));
 
@@ -357,7 +359,7 @@ function animateReorderBack(container, originalOrder) {
       el.style.transition = 'none';
       el.getBoundingClientRect();
 
-      el.style.transition = 'transform 0.5s ease';
+      el.style.transition = 'transform 1s ease';
       el.style.transform = '';
 
       el.addEventListener('transitionend', () => {
@@ -366,7 +368,6 @@ function animateReorderBack(container, originalOrder) {
     });
   });
 }
-
 
 
 function oneLetterDiff(a, b) {
@@ -485,6 +486,8 @@ async function playMove() {
   updateAllBoxes();
   renderProgress();
   renderUsedWords();
+
+  originalOrder = Array.from(wordsUsedEl.children);
   renderAssist();
   
 
