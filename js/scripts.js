@@ -39,6 +39,8 @@ let finished = false;
 let restrictedWords = [];
 let wordsused = {3: [], 4: [], 5: []};
 let originalOrder = []; // store the natural order for reverting
+let potential = [];
+let nonPotential = [];
 let historyString = '↪'; //
 let currentStage = 0; //
 const progressBar = document.getElementById('progressBar');
@@ -232,32 +234,79 @@ function renderAssist() {
   if (!repetitiveAssist.checked || currentTyped.length === 0) {
     if (originalOrder.length > 0) {
       animateReorderBack(wordsUsedEl, originalOrder);
-    }
 
-    for (const el of wordsUsedEl.children) {
-      // el.classList.remove('potential', 'disappear', 'moving');
-      // el.style.transition = '';
-      // el.style.transform = '';
+      // Wait for all transitions to finish before updating classes
+      Promise.all(
+        Array.from(wordsUsedEl.children).map(el =>
+          new Promise(resolve => {
+            el.addEventListener('transitionend', resolve, { once: true });
+          })
+        )
+      ).then(() => {
+        for (const el of wordsUsedEl.children) {
+          el.classList.remove('potential', 'disappear', 'moving');
+          el.style.transition = '';
+          el.style.transform = '';
+        }
+      });
+    } else {
+      for (const el of wordsUsedEl.children) {
+        el.classList.remove('potential', 'disappear', 'moving');
+        el.style.transition = '';
+        el.style.transform = '';
+      }
     }
     return;
   }
 
   // --- Case 2: Assist on and something typed ---
-  const potential = [];
-  const nonPotential = [];
-  for (const el of wordsUsedEl.children) {
+  potential = [];
+  nonPotential = [];
+  for (const el of originalOrder) {
     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
-      // el.classList.add('potential');
-      // el.classList.remove('disappear');
       potential.push(el);
     } else {
-      // el.classList.remove('potential');
-      // el.classList.add('disappear');
       nonPotential.push(el);
     }
   }
 
+  potential.reverse();
+
+  // Animate reorder first, then update classes after transition
   animateReorder(wordsUsedEl, potential);
+
+  // Wait for the animation to finish before updating classes
+  // Use a Promise to wait for all transitions
+  Promise.all(
+    Array.from(wordsUsedEl.children).map(el =>
+      new Promise(resolve => {
+        el.addEventListener('transitionend', resolve, { once: true });
+      })
+    )
+  ).then(() => {
+    for (let el of potential) {
+      if (currentTyped.length !== lengthOfWord) el.classList.add('potential');
+      else {
+        el.classList.remove('potential');
+        el.classList.add('match');
+      }
+      el.classList.remove('disappear');
+    }
+    for (let el of nonPotential) {
+      el.classList.remove('potential');
+      el.classList.add('disappear');
+    }
+  });
+
+  // // First reorder, then update classes
+  // for (let el of potential) {
+  //   el.classList.add('potential');
+  //   el.classList.remove('disappear');
+  // }
+  // for (let el of nonPotential) {
+  //   el.classList.remove('potential');
+  //   el.classList.add('disappear');
+  // }
 }
 
 // ---- Smooth forward animation (bring potential to start) ----
@@ -285,7 +334,7 @@ function animateReorder(container, potentialList) {
       el.style.transition = 'none';
       el.getBoundingClientRect(); // force reflow
 
-      el.style.transition = 'transform 0.3s ease';
+      el.style.transition = 'transform 1s ease';
       el.style.transform = '';
 
       el.addEventListener('transitionend', () => {
@@ -319,7 +368,7 @@ function animateReorderBack(container, originalOrder) {
       el.style.transition = 'none';
       el.getBoundingClientRect();
 
-      el.style.transition = 'transform 0.3s ease';
+      el.style.transition = 'transform 1s ease';
       el.style.transform = '';
 
       el.addEventListener('transitionend', () => {
@@ -445,7 +494,8 @@ async function playMove() {
   updateAllBoxes();
   renderProgress();
   renderUsedWords();
-  renderAssist();
+  originalOrder = Array.from(wordsUsedEl.children);
+  // renderAssist();
   
 
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
@@ -461,7 +511,6 @@ document.onkeydown = e => {
     currentTyped = currentTyped.slice(0, -1);
     updateAllBoxes();
     renderAssist();
-    console.log(currentTyped);
     return;
   }
   if (e.key === 'Enter') {
