@@ -167,24 +167,33 @@ function renderAssist() {
     for (const el of wordsUsedEl.children) {
       el.classList.remove('potential');
     }
+    return;
   }
-  console.log(currentTyped.length);
+
   if (currentTyped.length === 0) {
     for (const el of wordsUsedEl.children) {
       el.classList.remove('potential');
     }
     return;
   }
+
+  // Collect potential and non-potential elements
+  const potential = [];
+  const nonPotential = [];
   for (const el of wordsUsedEl.children) {
-    console.log(el.textContent, currentTyped.toLowerCase(), el.textContent.startsWith(currentTyped.toLowerCase()));
     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
       el.classList.add('potential');
-    }
-    else {
+      potential.push(el);
+    } else {
       el.classList.remove('potential');
+      nonPotential.push(el);
     }
   }
-  return;
+
+  // Reorder: potential matches first
+  wordsUsedEl.innerHTML = '';
+  for (const el of potential) wordsUsedEl.appendChild(el);
+  for (const el of nonPotential) wordsUsedEl.appendChild(el);
 }
 
 function oneLetterDiff(a, b) {
