@@ -101,7 +101,7 @@ button:disabled { background: #94a3b8; color: #fff; }
 }
 .letter-box {
   width: 40px; height: 40px;
-  font-size: 40px;
+  font-size: 55px;
   font-family: 'Itim', cursive;
   display: flex;
   justify-content: center;

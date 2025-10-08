@@ -768,7 +768,7 @@ function setup(words) {
   renderProgress();
   updateAllBoxes();
   renderUsedWords();
-  renderAssist();
+  originalOrder = Array.from(wordsUsedEl.children);
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
   console.log(localStorage.getItem('wordChainState'));
 }
@@ -880,7 +880,7 @@ async function loadGameState() {
     updateAllBoxes();
     setMsg('');
     renderUsedWords();
-    renderAssist();
+    originalOrder = Array.from(wordsUsedEl.children);
     for (const key in levels) {
       for (const words in levels[key].words) {
         restrictedWords.push(words.start);
