@@ -244,14 +244,14 @@ function renderAssist() {
         )
       ).then(() => {
         for (const el of wordsUsedEl.children) {
-          el.classList.remove('potential', 'disappear', 'moving');
+          el.classList.remove('potential', 'disappear', 'moving', 'match');
           el.style.transition = '';
           el.style.transform = '';
         }
       });
     } else {
       for (const el of wordsUsedEl.children) {
-        el.classList.remove('potential', 'disappear', 'moving');
+        el.classList.remove('potential', 'disappear', 'moving', 'match');
         el.style.transition = '';
         el.style.transform = '';
       }
@@ -285,7 +285,10 @@ function renderAssist() {
     )
   ).then(() => {
     for (let el of potential) {
-      if (currentTyped.length !== lengthOfWord) el.classList.add('potential');
+      if (currentTyped.length !== lengthOfWord) {
+        el.classList.remove('match');
+        el.classList.add('potential');
+      }
       else {
         el.classList.remove('potential');
         el.classList.add('match');
@@ -294,6 +297,7 @@ function renderAssist() {
     }
     for (let el of nonPotential) {
       el.classList.remove('potential');
+      el.classList.remove('match');
       el.classList.add('disappear');
     }
   });
