@@ -38,6 +38,7 @@ let levels = []; //
 let finished = false;
 let restrictedWords = [];
 let wordsused = {3: [], 4: [], 5: []};
+let originalOrder = []; // store the natural order for reverting
 let historyString = '↪'; //
 let currentStage = 0; //
 const progressBar = document.getElementById('progressBar');
@@ -164,39 +165,163 @@ function renderInventory() {
 
 }
 
+// function renderAssist() {
+//   if (!repetitiveAssist.checked) {
+//     for (const el of wordsUsedEl.children) {
+//       el.classList.remove('potential');
+//       el.classList.remove('disappear');
+//     }
+//     return;
+//   }
+
+//   if (currentTyped.length === 0) {
+//     for (const el of wordsUsedEl.children) {
+//       el.classList.remove('potential');
+//       el.classList.remove('disappear');
+//     }
+//     return;
+//   }
+
+//   // Collect potential and non-potential elements
+//   const potential = [];
+//   const nonPotential = [];
+//   for (const el of wordsUsedEl.children) {
+//     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
+//       el.classList.add('potential');
+//       el.classList.add('moving');
+//       potential.push(el);
+//     } else {
+//       el.classList.remove('potential');
+//       el.classList.add('disappear');
+//       nonPotential.push(el);
+//     }
+//   }
+
+//   reorderPotentialWords();
+
+//   // // Reorder: potential matches first
+//   // wordsUsedEl.innerHTML = '';
+//   // for (const el of potential) wordsUsedEl.appendChild(el);
+//   // for (const el of nonPotential) wordsUsedEl.appendChild(el);
+// }
+
+// function reorderPotentialWords() {
+//   const potentials = wordsUsedEl.querySelectorAll('.used-word-item.potential');
+//   potentials.forEach(p => wordsUsedEl.prepend(p));
+// }
+
+
+
 function renderAssist() {
-  if (!repetitiveAssist.checked) {
+  // Save the original order once
+  // if (originalOrder.length === 0) {
+  //   originalOrder = Array.from(wordsUsedEl.children);
+  // }
+
+  // --- Case 1: Assist off or no text typed ---
+  if (!repetitiveAssist.checked || currentTyped.length === 0) {
+    // if (originalOrder.length > 0) {
+    //   animateReorderBack(wordsUsedEl, originalOrder);
+    // }
+
     for (const el of wordsUsedEl.children) {
-      el.classList.remove('potential');
+      el.classList.remove('potential', 'disappear', 'moving');
+      el.style.transition = '';
+      el.style.transform = '';
     }
     return;
   }
 
-  if (currentTyped.length === 0) {
-    for (const el of wordsUsedEl.children) {
-      el.classList.remove('potential');
-    }
-    return;
-  }
-
-  // Collect potential and non-potential elements
+  // --- Case 2: Assist on and something typed ---
   const potential = [];
   const nonPotential = [];
   for (const el of wordsUsedEl.children) {
     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
+      console.log('true');
       el.classList.add('potential');
+      el.classList.remove('disappear');
       potential.push(el);
     } else {
       el.classList.remove('potential');
+      el.classList.add('disappear');
       nonPotential.push(el);
     }
+    
   }
-
-  // Reorder: potential matches first
-  wordsUsedEl.innerHTML = '';
-  for (const el of potential) wordsUsedEl.appendChild(el);
-  for (const el of nonPotential) wordsUsedEl.appendChild(el);
+  
+  // animateReorder(wordsUsedEl, potential);
 }
+
+// ---- Smooth forward animation (bring potential to start) ----
+function animateReorder(container, potentialList) {
+  const items = Array.from(container.children);
+
+  // Record current positions
+  const firstRects = new Map(items.map(el => [el, el.getBoundingClientRect()]));
+
+  // Move potential items to the front
+  potentialList.forEach(p => container.prepend(p));
+
+  requestAnimationFrame(() => {
+    const lastRects = new Map(items.map(el => [el, el.getBoundingClientRect()]));
+
+    items.forEach(el => {
+      const first = firstRects.get(el);
+      const last = lastRects.get(el);
+      if (!first || !last) return;
+
+      const dx = first.left - last.left;
+      const dy = first.top - last.top;
+
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+      el.style.transition = 'none';
+      el.getBoundingClientRect(); // force reflow
+
+      el.style.transition = 'transform 0.3s ease';
+      el.style.transform = '';
+
+      el.addEventListener('transitionend', () => {
+        el.style.transition = '';
+      }, { once: true });
+    });
+  });
+}
+
+// ---- Smooth reverse animation (return to original order) ----
+function animateReorderBack(container, originalOrder) {
+  const items = Array.from(container.children);
+
+  const firstRects = new Map(items.map(el => [el, el.getBoundingClientRect()]));
+
+  // Restore original DOM order
+  originalOrder.forEach(el => container.appendChild(el));
+
+  requestAnimationFrame(() => {
+    const lastRects = new Map(items.map(el => [el, el.getBoundingClientRect()]));
+
+    items.forEach(el => {
+      const first = firstRects.get(el);
+      const last = lastRects.get(el);
+      if (!first || !last) return;
+
+      const dx = first.left - last.left;
+      const dy = first.top - last.top;
+
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+      el.style.transition = 'none';
+      el.getBoundingClientRect();
+
+      el.style.transition = 'transform 0.3s ease';
+      el.style.transform = '';
+
+      el.addEventListener('transitionend', () => {
+        el.style.transition = '';
+      }, { once: true });
+    });
+  });
+}
+
+
 
 function oneLetterDiff(a, b) {
   if (a.length !== b.length) return false;

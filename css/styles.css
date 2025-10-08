@@ -216,14 +216,41 @@ button:disabled { background: #94a3b8; color: #fff; }
   margin-bottom: 2px;
   border: 1px solid #333;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s, opacity 0.4s;
   cursor: default;
   word-break: break-word;
+  opacity: 1;
+}
+
+.used-word-item.potential.moving {
+  animation: potential-move var(--move-duration, 0.4s) forwards;
+  --move-distance: 0px;
+}
+
+.used-word-item.potential.moving {
+  transform: translateX(var(--move-distance, -20px));
+}
+
+@keyframes potential-move {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(var(--move-distance, -20px));
+  }
 }
 
 .used-word-item.potential {
   background: #de9191;
+  transition: background 0.2s, border-color 0.2s, opacity 0.4s;
   border-color: #555;
+}
+
+/* Fade out animation */
+.used-word-item.disappear {
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
 }
 
 .used-word-item:hover {
