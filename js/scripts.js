@@ -74,15 +74,14 @@ buttonTray.appendChild(resetBtn);
 let word1, word2;
 
 function resetoriginalOrder() {
-  // originalOrder = [];
-  // const usedWords = wordsused[lengthOfWord] || [];
-  // usedWords.forEach(word => {
-  //   const div = document.createElement('div');
-  //   div.className = 'used-word-item';
-  //   div.textContent = word;
-  //   originalOrder.push(div);
-  // });
-  return;
+  originalOrder = [];
+  const usedWords = wordsused[lengthOfWord] || [];
+  usedWords.forEach(word => {
+    const div = document.createElement('div');
+    div.className = 'used-word-item';
+    div.textContent = word;
+    originalOrder.push(div);
+  });
 }
 
 function goNext() {
@@ -223,7 +222,7 @@ function renderInventory() {
 // }
 
 function renderAssist() {
-  return;
+  //return;
   // Save the original order once
   if (originalOrder.length === 0) {
     originalOrder = Array.from(wordsUsedEl.children);
@@ -248,50 +247,17 @@ function renderAssist() {
   const nonPotential = [];
   for (const el of wordsUsedEl.children) {
     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
+      el.classList.add('potential');
+      el.classList.remove('disappear');
       potential.push(el);
     } else {
+      el.classList.remove('potential');
+      el.classList.add('disappear');
       nonPotential.push(el);
     }
   }
 
-  potential.reverse(); // prepend reverses order, so reverse first
-
   animateReorder(wordsUsedEl, potential);
-
-  // Only update classes after animation finishes
-  setTimeout(() => {
-    for (const el of wordsUsedEl.children) {
-      if (el.textContent.startsWith(currentTyped.toLowerCase())) {
-        el.classList.add('potential');
-        el.classList.remove('disappear');
-        el.classList.add('moving');
-      } else {
-        el.classList.remove('potential');
-        el.classList.add('disappear');
-        el.classList.remove('moving');
-      }
-      el.style.transition = '';
-      el.style.transform = '';
-    }
-  }, 1000); // match animation duration
-  // // --- Case 2: Assist on and something typed ---
-  // const potential = [];
-  // const nonPotential = [];
-  // for (const el of wordsUsedEl.children) {
-  //   if (el.textContent.startsWith(currentTyped.toLowerCase())) {
-  //     el.classList.add('potential');
-  //     el.classList.remove('disappear');
-  //     potential.push(el);
-  //   } else {
-  //     el.classList.remove('potential');
-  //     el.classList.add('disappear');
-  //     nonPotential.push(el);
-  //   }
-  // }
-
-  // potential.reverse(); // prepend reverses order, so reverse first
-
-  // animateReorder(wordsUsedEl, potential);
 }
 
 // ---- Smooth forward animation (bring potential to start) ----
@@ -319,7 +285,7 @@ function animateReorder(container, potentialList) {
       el.style.transition = 'none';
       el.getBoundingClientRect(); // force reflow
 
-      el.style.transition = 'transform 1s ease';
+      el.style.transition = 'transform 0.3s ease';
       el.style.transform = '';
 
       el.addEventListener('transitionend', () => {
@@ -331,13 +297,7 @@ function animateReorder(container, potentialList) {
 
 // ---- Smooth reverse animation (return to original order) ----
 function animateReorderBack(container, originalOrder) {
-
   const items = Array.from(container.children);
-
-  for (let el = 0; el < originalOrder.length; el++) {
-    console.log(items[el]);
-    console.log(originalOrder[el]);
-  }
 
   const firstRects = new Map(items.map(el => [el, el.getBoundingClientRect()]));
 
@@ -359,7 +319,7 @@ function animateReorderBack(container, originalOrder) {
       el.style.transition = 'none';
       el.getBoundingClientRect();
 
-      el.style.transition = 'transform 1s ease';
+      el.style.transition = 'transform 0.3s ease';
       el.style.transform = '';
 
       el.addEventListener('transitionend', () => {
@@ -368,7 +328,6 @@ function animateReorderBack(container, originalOrder) {
     });
   });
 }
-
 
 function oneLetterDiff(a, b) {
   if (a.length !== b.length) return false;
@@ -486,8 +445,6 @@ async function playMove() {
   updateAllBoxes();
   renderProgress();
   renderUsedWords();
-
-  originalOrder = Array.from(wordsUsedEl.children);
   renderAssist();
   
 
