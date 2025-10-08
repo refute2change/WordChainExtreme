@@ -25,6 +25,7 @@ const startBoxes = document.getElementById('startBoxes');
 const targetBoxes = document.getElementById('targetBoxes');
 const repetitiveAssist = document.getElementById('assistToggle');
 const switchLabel = document.getElementById('assistLabel');
+const wordsUsedEl = document.getElementById('wordsUsed');
 if (repetitiveAssist.checked) switchLabel.classList.remove('inactive');
 else switchLabel.classList.add('inactive');
 repetitiveAssist.onchange = () => {
@@ -160,6 +161,18 @@ function renderInventory() {
 
 }
 
+function renderAssist() {
+  if (!repetitiveAssist.checked) return;
+  if (currentTyped.length === 0) return;
+  for (const el of wordsUsedEl.children) {
+    if (el.textContent.startsWith(currentTyped.toLowerCase())) {
+      el.classList.add('potential');
+      updateAllBoxes();
+    }
+  }
+  return;
+}
+
 function oneLetterDiff(a, b) {
   if (a.length !== b.length) return false;
   let diff = 0;
@@ -276,6 +289,7 @@ async function playMove() {
   updateAllBoxes();
   renderProgress();
   renderUsedWords();
+  renderAssist();
   
 
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
@@ -290,6 +304,7 @@ document.onkeydown = e => {
   if (e.key === 'Backspace') {
     currentTyped = currentTyped.slice(0, -1);
     updateAllBoxes();
+    renderAssist();
     console.log(currentTyped);
     return;
   }
@@ -302,11 +317,11 @@ document.onkeydown = e => {
     currentTyped += letter;
     console.log(currentTyped);
     updateAllBoxes();
+    renderAssist();
   }
 };
 
 function renderUsedWords() {
-  const wordsUsedEl = document.getElementById('wordsUsed');
   wordsUsedEl.innerHTML = '';
   const usedWords = wordsused[lengthOfWord] || [];
   usedWords.forEach(word => {
@@ -544,6 +559,7 @@ function setup(words) {
   renderProgress();
   updateAllBoxes();
   renderUsedWords();
+  renderAssist();
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
   console.log(localStorage.getItem('wordChainState'));
 }
@@ -655,6 +671,7 @@ async function loadGameState() {
     updateAllBoxes();
     setMsg('');
     renderUsedWords();
+    renderAssist();
     for (const key in levels) {
       for (const words in levels[key].words) {
         restrictedWords.push(words.start);
