@@ -31,6 +31,7 @@ else switchLabel.classList.add('inactive');
 repetitiveAssist.onchange = () => {
   if (repetitiveAssist.checked) switchLabel.classList.remove('inactive');
   else switchLabel.classList.add('inactive');
+  renderAssist();
 }
 let currentTyped = '';
 let levels = []; //
@@ -162,12 +163,25 @@ function renderInventory() {
 }
 
 function renderAssist() {
-  if (!repetitiveAssist.checked) return;
-  if (currentTyped.length === 0) return;
+  if (!repetitiveAssist.checked) {
+    for (const el of wordsUsedEl.children) {
+      el.classList.remove('potential');
+    }
+  }
+  console.log(currentTyped.length);
+  if (currentTyped.length === 0) {
+    for (const el of wordsUsedEl.children) {
+      el.classList.remove('potential');
+    }
+    return;
+  }
   for (const el of wordsUsedEl.children) {
+    console.log(el.textContent, currentTyped.toLowerCase(), el.textContent.startsWith(currentTyped.toLowerCase()));
     if (el.textContent.startsWith(currentTyped.toLowerCase())) {
       el.classList.add('potential');
-      updateAllBoxes();
+    }
+    else {
+      el.classList.remove('potential');
     }
   }
   return;
