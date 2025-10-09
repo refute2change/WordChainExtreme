@@ -345,6 +345,9 @@ button:disabled { background: #94a3b8; color: #fff; }
     width: 100%
   }
 
+  .outlined-text {
+    font: 60px;
+  }
 }
 
 #progressBar {
@@ -503,8 +506,8 @@ button:disabled { background: #94a3b8; color: #fff; }
 
 .outlined-text {
   font-size: 80px;
-  font-family: sans-serif;
-  color: #fff; /* Fill color of the text */
+  font-family: Itim, cursive;
+  color: transparent; /* Fill color of the text */
   -webkit-text-stroke: 2px #ff6c6c; /* 2px wide black outline */
 }
 
