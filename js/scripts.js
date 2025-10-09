@@ -654,7 +654,6 @@ async function pickWords(groups, len, potentialunused, minLen) {
   let index2 = wordList.indexOf(word2);
 
   const exists = await existsWordChainByIndex(index1, index2, potentialunused, len, minLen);
-  console.log(exists);
   if (!exists.length) {
     return {"start": "", "target": "", "chain": []};
   }
@@ -708,8 +707,7 @@ async function createLevels()
 
 function renderLoadProgress(done) {
   // compute total stages
-  let total = 0;
-  for (const lvl of levels) total += lvl.words.length;
+  let total = 27;
   if (total === 0) return;
 
   // ensure the bar element exists
@@ -718,6 +716,21 @@ function renderLoadProgress(done) {
     return;
   }
 
+  if (done > 1) {
+    let fill = progressBar.querySelector('#progressFill');
+    let label = progressBar.querySelector('#progressLabel');
+    const percent = ((done * 1.0 / total) * 100).toFixed(1);
+    if (fill) fill.style.width = `${percent}%`;
+    if (label) label.textContent = `Generating Levels: ${percent}%`;
+    if (done >= total && fill) {
+      fill.style.background = 'linear-gradient(90deg, #00ff9d, #00ff9d)';
+      if (label) label.textContent = 'Generation Complete!';
+    }
+    return;
+  }
+
+  progressBar.innerHTML = '';
+  stageContainer.innerHTML = '';
   // initialize inner elements once
   let fill = progressBar.querySelector('#progressFill');
   let label = progressBar.querySelector('#progressLabel');
@@ -760,7 +773,7 @@ function renderLoadProgress(done) {
   progressBar.style.overflow = 'hidden';
 
   // update progress
-  const percent = Math.floor((done / total) * 100);
+  const percent = Math.floor((done * 1.0 / total) * 100);
   fill.style.width = `${percent}%`;
   label.textContent = `Generating Levels: ${percent}%`;
 
