@@ -494,6 +494,7 @@ async function playMove() {
       setMsg('⚠ No possible path from here, the game must be restarted.');
       finished = true;
       nextBtn.disabled = true;
+      updateAllBoxes();
     }
   }
 
@@ -982,6 +983,7 @@ async function loadGameState() {
         setMsg('⚠ No possible path from here, the game must be restarted.');
         finished = true;
         nextBtn.disabled = true;
+        updateAllBoxes();
       }
     }
     return true;
