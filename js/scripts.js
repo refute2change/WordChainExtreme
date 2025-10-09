@@ -430,7 +430,7 @@ async function existsWordChain(startWord, targetWord) {
       i = wordList[neighbor];
       if (wordsused[len].includes(i))
       {
-        if (i !== targetIdx) continue; // skip used words
+        if (i !== targetEl.value) continue; // skip used words
       }
       // if (restrictedWords.includes(i) && i !== targetEl.value) continue; // skip restricted words
       if (!visited.has(neighbor)) {
