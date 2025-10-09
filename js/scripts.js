@@ -428,7 +428,10 @@ async function existsWordChain(startWord, targetWord) {
     if (curr === targetIdx) return true;
     for (const neighbor of adjList[curr]) {
       i = wordList[neighbor];
-      if (wordsused[len].includes(i)) continue; // skip used words
+      if (wordsused[len].includes(i))
+      {
+        if (i !== targetIdx) continue; // skip used words
+      }
       // if (restrictedWords.includes(i) && i !== targetEl.value) continue; // skip restricted words
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
@@ -470,7 +473,7 @@ async function playMove() {
   history.push(w);
   historyString += cost;
   startEl.value = w;
-  wordsused[lengthOfWord].push(w);
+  if (!wordsused[lengthOfWord].includes(w)) wordsused[lengthOfWord].push(w);
   currentTyped = '';
   nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
 
