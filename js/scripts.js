@@ -429,7 +429,7 @@ async function existsWordChain(startWord, targetWord) {
     for (const neighbor of adjList[curr]) {
       i = wordList[neighbor];
       if (wordsused[len].includes(i)) continue; // skip used words
-      if (restrictedWords.includes(i) && i !== targetEl.value) continue; // skip restricted words
+      // if (restrictedWords.includes(i) && i !== targetEl.value) continue; // skip restricted words
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
         queue.push(neighbor);
@@ -460,7 +460,7 @@ async function playMove() {
   if (!oneLetterDiff(current, w)) return setMsg('Must change exactly 1 letter.');
   if (history.includes(w)) return setMsg('Already used.');
   if (wordsused[lengthOfWord].includes(w)) return setMsg('Already used.');
-  if (restrictedWords.includes(w) && w !== targetEl.value) return setMsg('Word is reserved for future uses, please take another path.');
+  // if (restrictedWords.includes(w) && w !== targetEl.value) return setMsg('Word is reserved for future uses, please take another path.');
   const cost = getChangedLetter(current, w);
   if (!inventory[cost] || inventory[cost] <= 0) return setMsg(`No ${cost}s left.`);
 
@@ -597,7 +597,7 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len,
     }
     for (const neighbor of adjList[curr]) {
       i = wordList[neighbor];
-      if (restrictedWords.includes(i)) continue; // skip used words
+      // if (restrictedWords.includes(i)) continue; // skip used words
       if (usedSet.has(neighbor)) continue;
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
@@ -743,7 +743,7 @@ function setup(words) {
   startEl.value = words.start;
   targetEl.value = words.target;
   lengthOfWord = words.start.length;
-  wordsused[lengthOfWord].push(startEl.value);
+  if (!wordsused[lengthOfWord].includes(startEl.value)) wordsused[lengthOfWord].push(startEl.value);
   finished = false;
   current = words.start;
   history = [current];
