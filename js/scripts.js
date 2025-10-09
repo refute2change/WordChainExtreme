@@ -42,6 +42,7 @@ let originalOrder = []; // store the natural order for reverting
 let potential = [];
 let nonPotential = [];
 let historyString = '↪'; //
+let title = "WORDCHAIN";
 let currentStage = 0; //
 const progressBar = document.getElementById('progressBar');
 const stageContainer = document.getElementById('stageContainer');
@@ -800,14 +801,15 @@ function renderProgress() {
 
   for (let index = 0; index < levels.length; index++) {
     const lv = levels[index];
+    const char = title[index];
 
     const levelDiv = document.createElement('div');
     levelDiv.className = 'level-node';
 
     // big circle for level
     const levelBtn = document.createElement('div');
-    levelBtn.className = 'level-circle';
-    levelBtn.textContent = lv.level;
+    levelBtn.className = 'outlined-text';
+    levelBtn.textContent = char;
 
     if (index < currentLevelIndex) {
       levelBtn.classList.add('completed');

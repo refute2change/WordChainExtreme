@@ -500,3 +500,19 @@ button:disabled { background: #94a3b8; color: #fff; }
 .inactive {
   opacity: 0.25;
 }
+
+.outlined-text {
+  font-size: 80px;
+  font-family: sans-serif;
+  color: #fff; /* Fill color of the text */
+  -webkit-text-stroke: 2px #ff6c6c; /* 2px wide black outline */
+}
+
+.outlined-text.completed {
+  color: #50ed75;
+  -webkit-text-stroke: 2px #50ed75;
+}
+
+.outlined-text.active {
+  -webkit-text-stroke: 2px #eeff00;
+}
