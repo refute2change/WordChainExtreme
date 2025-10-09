@@ -678,7 +678,7 @@ async function createLevels()
   const res = await fetch('answerscompartments.json');
   const groups = await res.json();
   levels = [];
-  let i;
+  let i, done = 0;
   for (const lvl of levelconstraints)
   {
     i = lvl.level;
@@ -696,12 +696,79 @@ async function createLevels()
       res = {"start": res.start, "target": res.target};
       words.push(res);
       console.log(`Level ${i} Stage with length ${stageLen} is done.`);
+      done++;
+      renderLoadProgress(done);
     }
     levels.push({level: i, words: words});
   }
   console.log('Created levels:', levels);
   localStorage.setItem('wordChainState', JSON.stringify(createState()));
   console.log(localStorage.getItem('wordChainState'));
+}
+
+function renderLoadProgress(done) {
+  // compute total stages
+  let total = 0;
+  for (const lvl of levels) total += lvl.words.length;
+  if (total === 0) return;
+
+  // ensure the bar element exists
+  if (!progressBar) {
+    console.warn('progressBar element not defined!');
+    return;
+  }
+
+  // initialize inner elements once
+  let fill = progressBar.querySelector('#progressFill');
+  let label = progressBar.querySelector('#progressLabel');
+
+  if (!fill) {
+    fill = document.createElement('div');
+    fill.id = 'progressFill';
+    Object.assign(fill.style, {
+      width: '0%',
+      height: '100%',
+      background: 'linear-gradient(90deg, #00ff9d, #0077ff)',
+      borderRadius: 'inherit',
+      transition: 'width 0.3s ease',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    });
+    progressBar.appendChild(fill);
+  }
+
+  if (!label) {
+    label = document.createElement('span');
+    label.id = 'progressLabel';
+    Object.assign(label.style, {
+      position: 'relative',
+      zIndex: 2,
+      color: '#fff',
+      fontFamily: 'Itim, cursive',
+      fontSize: '1rem',
+      textShadow: '0 0 4px rgba(0,0,0,0.6)',
+    });
+    progressBar.appendChild(label);
+  }
+
+  // make sure progressBar is ready for absolute positioning
+  const computedStyle = getComputedStyle(progressBar);
+  if (computedStyle.position === 'static') {
+    progressBar.style.position = 'relative';
+  }
+  progressBar.style.overflow = 'hidden';
+
+  // update progress
+  const percent = Math.floor((done / total) * 100);
+  fill.style.width = `${percent}%`;
+  label.textContent = `Generating Levels: ${percent}%`;
+
+  // mark completion
+  if (done >= total) {
+    fill.style.background = 'linear-gradient(90deg, #00ff9d, #00ff9d)';
+    label.textContent = 'Generation Complete!';
+  }
 }
 
 async function chooseWords() {
