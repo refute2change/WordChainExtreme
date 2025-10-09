@@ -328,28 +328,6 @@ button:disabled { background: #94a3b8; color: #fff; }
   display: none;
 }
 
-/* 📱 Mobile: make keys bigger */
-@media (max-width: 768px) {
-  /* .inv-btn {
-    width: 30px;
-    height: 45px;
-    font-size: 18px;
-  } */
-
-  .letter-box {
-    width: 35px;
-    height: 35px;
-  }
-
-  #gameContainer {
-    width: 100%
-  }
-
-  .outlined-text {
-    font-size: 60px;
-  }
-}
-
 #progressBar {
   display: flex;
   align-items: center;
@@ -518,4 +496,26 @@ button:disabled { background: #94a3b8; color: #fff; }
 
 .outlined-text.active {
   -webkit-text-stroke: 2px #eeff00;
+}
+
+/* 📱 Mobile: make keys bigger */
+@media (max-width: 768px) {
+  /* .inv-btn {
+    width: 30px;
+    height: 45px;
+    font-size: 18px;
+  } */
+
+  .letter-box {
+    width: 35px;
+    height: 35px;
+  }
+
+  #gameContainer {
+    width: 100%
+  }
+
+  .outlined-text {
+    font-size: 60px;
+  }
 }
