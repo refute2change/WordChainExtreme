@@ -81,6 +81,10 @@ button:disabled { background: #94a3b8; color: #fff; }
   white-space: nowrap;    /* keep items from wrapping */
 }
 
+#history.inactive {
+  opacity: 0;
+}
+
 #history::-webkit-scrollbar {
   height: 6px;
 }
@@ -98,6 +102,9 @@ button:disabled { background: #94a3b8; color: #fff; }
   border-radius: 6px;
   color: #fff;
   background-color: #1a304c;
+}
+.word-item.inactive {
+  opacity: 0;
 }
 .letter-box {
   width: 40px; height: 40px;

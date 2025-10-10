@@ -104,8 +104,9 @@ function goNext() {
 
 function renderHistory() {
   let i = 0;
-  if (totalStages == 0 && history.length == 1) historyEl.style.opacity = '0';
-  else historyEl.style.opacity = '1';
+  console.log(totalStages, history.length);
+  if (totalStages == 0 && history.length == 1) historyEl.classList.add('inactive');
+  else historyEl.classList.remove('inactive');
   historyEl.innerHTML = '';
   history.forEach(w => {
     const div = document.createElement('div');
