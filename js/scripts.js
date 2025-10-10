@@ -547,7 +547,8 @@ function renderUsedWords() {
     div.textContent = word;
     wordsUsedEl.appendChild(div);
   });
-  if (currentTotalStage === 0) wordsUsedEl.style.opacity = '0';
+  const wordsUsedContainer = document.getElementById('wordsUsedContainer');
+  if (currentTotalStage === 0) wordsUsedContainer.style.opacity = '0';
 }
 
 function renderWordBoxes(container, word, totalLength, mode = 0) {
