@@ -547,6 +547,7 @@ function renderUsedWords() {
     div.textContent = word;
     wordsUsedEl.appendChild(div);
   });
+  if (currentTotalStage === 0) wordsUsedEl.style.opacity = '0';
 }
 
 function renderWordBoxes(container, word, totalLength, mode = 0) {
@@ -898,7 +899,7 @@ function createState() {
 
 function renderProgress() {
   progressBar.innerHTML = '';
-
+  if (LevelsCompleted === 0) progressBar.style.opacity = '0';
   for (let index = 0; index < levels.length; index++) {
     const lv = levels[index];
     const char = title[index];
