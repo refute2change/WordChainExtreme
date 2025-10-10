@@ -549,6 +549,7 @@ function renderUsedWords() {
   });
   const wordsUsedContainer = document.getElementById('wordsUsedContainer');
   if (currentTotalStage === 0) wordsUsedContainer.style.opacity = '0';
+  else wordsUsedContainer.style.opacity = '1';
 }
 
 function renderWordBoxes(container, word, totalLength, mode = 0) {
@@ -901,6 +902,7 @@ function createState() {
 function renderProgress() {
   progressBar.innerHTML = '';
   if (LevelsCompleted === 0) progressBar.style.opacity = '0';
+  else progressBar.style.opacity = '1';
   for (let index = 0; index < levels.length; index++) {
     const lv = levels[index];
     const char = title[index];
