@@ -147,6 +147,7 @@ function renderInventory() {
 
       btn.onclick = () => {
         if (currentTyped.length >= current.length) return;
+        if (finished) return;
         currentTyped += letter.toLowerCase();
         updateAllBoxes();
         renderAssist();
@@ -478,7 +479,6 @@ async function playMove() {
   startEl.value = w;
   if (!wordsused[lengthOfWord].includes(w)) wordsused[lengthOfWord].push(w);
   currentTyped = '';
-  nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
 
   console.log(wordsused);
   wayout = await existsWordChain(w, targetEl.value);
@@ -501,6 +501,13 @@ async function playMove() {
     }
   }
 
+  if (LevelsCompleted === levels.length)
+  {
+    setMsg('🏆 All levels completed! Congratulations for finally beating this hecking of a torture.');
+    nextBtn.disabled = true;
+  }
+  else nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
+
   renderHistory();
   renderInventory();
   updateAllBoxes();
@@ -519,6 +526,7 @@ function setMsg(t) { msgEl.textContent = t; }
 document.onkeydown = e => {
   if (startEl.value === targetEl.value) return;
   setMsg('');
+  if (finished) return;
   if (e.key === 'Backspace') {
     currentTyped = currentTyped.slice(0, -1);
     updateAllBoxes();
