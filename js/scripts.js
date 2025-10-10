@@ -8,9 +8,9 @@ const levelconstraints = [{level:1, stages: [3]}, {level:2, stages: [3, 3]}, {le
                           {level:4, stages: [3, 4]}, {level:5, stages: [3, 4, 4]}, {level:6, stages: [4, 4, 4, 4]},
                           {level:7, stages: [5, 5]}, {level:8, stages: [4, 5, 4, 5]}, {level:9, stages: [3, 3, 4, 4, 5, 5]}];
 
-const minimumLength = [{level:1, stages: [3]}, {level:2, stages: [3, 4]}, {level:3, stages: [4, 5, 6]},
-                      {level:4, stages: [5, 4]}, {level:5, stages: [5, 5, 5]}, {level:6, stages: [4, 5, 6, 7]},
-                      {level:7, stages: [5, 6]}, {level:8, stages: [5, 6, 6, 7]}, {level:9, stages: [6, 6, 7, 8, 9, 10]}];
+const minimumLength = [{level:1, stages: [3]}, {level:2, stages: [3, 3]}, {level:3, stages: [3, 4, 5]},
+                      {level:4, stages: [4, 4]}, {level:5, stages: [4, 4, 5]}, {level:6, stages: [4, 4, 5, 6]},
+                      {level:7, stages: [5, 6]}, {level:8, stages: [5, 5, 6, 6]}, {level:9, stages: [5, 6, 6, 7, 8, 10]}];
 
 // DOM elements
 const startEl = document.getElementById('startWord');
