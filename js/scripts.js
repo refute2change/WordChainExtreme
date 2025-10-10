@@ -104,6 +104,8 @@ function goNext() {
 
 function renderHistory() {
   let i = 0;
+  if (totalStages == 0 && history.length == 1) historyEl.style.opacity = '0';
+  else historyEl.style.opacity = '1';
   historyEl.innerHTML = '';
   history.forEach(w => {
     const div = document.createElement('div');
@@ -576,19 +578,47 @@ function updateAllBoxes() {
 startEl.addEventListener('input', updateAllBoxes);
 targetEl.addEventListener('input', updateAllBoxes);
 
+/**
+ * Optimization advice:
+ * - Cache fetches for legalanswers.json and legalanswersedgelist.json outside loops.
+ * - Avoid repeated fetches inside pickWords and existsWordChainByIndex.
+ * - Use Sets for faster lookups.
+ * - Consider parallelizing independent stages with Promise.all if possible.
+ * - Reduce unnecessary retries by tracking failed pairs.
+ * - If possible, precompute adjacency and word lists once per session.
+ * - For large word lists, consider using a Web Worker for async processing.
+ */
+
+// Example: cache fetches at top-level
+let cachedLegalAnswers = null;
+let cachedAdjList = null;
+
+async function getLegalAnswers() {
+  if (!cachedLegalAnswers) {
+    const res = await fetch('legalanswers.json');
+    cachedLegalAnswers = await res.json();
+  }
+  return cachedLegalAnswers;
+}
+
+async function getAdjList() {
+  if (!cachedAdjList) {
+    const res = await fetch('legalanswersedgelist.json');
+    cachedAdjList = await res.json();
+  }
+  return cachedAdjList;
+}
+
 async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len, minLen) {
-  const resWords = await fetch('legalanswers.json');
-  const groups = await resWords.json();
+  const groups = await getLegalAnswers();
   const wordList = groups[len];
 
-  const resAdj = await fetch('legalanswersedgelist.json');
-  const adjList1 = await resAdj.json();
+  const adjList1 = await getAdjList();
   const adjList = adjList1[len];
 
   const usedSet = new Set(potentialunused);
 
   const visited = new Set();
-  // Each queue item: { idx, path }
   const queue = [{ idx: startIdx, path: [startIdx] }];
   visited.add(startIdx);
 
@@ -596,12 +626,10 @@ async function existsWordChainByIndex(startIdx, targetIdx, potentialunused, len,
   while (queue.length) {
     const { idx: curr, path } = queue.shift();
     if (curr === targetIdx && path.length >= minLen) {
-      // You can return path here if you want the chain
       return path;
     }
     for (const neighbor of adjList[curr]) {
       i = wordList[neighbor];
-      // if (restrictedWords.includes(i)) continue; // skip used words
       if (usedSet.has(neighbor)) continue;
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
@@ -616,65 +644,47 @@ async function pickWords(groups, len, potentialunused, minLen) {
   const templist = groups[len];
 
   let index;
+  let tries = 0;
+  let maxTries = 50; // limit retries for performance
+  let list, i1, i2, word1, word2, exists;
   do {
     index = Math.floor(Math.random() * templist.length);
-  } while (templist[index].length < 2);
+    list = templist[index];
+    if (!list || list.length < 2) continue;
+    i1 = Math.floor(Math.random() * list.length);
+    do {
+      i2 = Math.floor(Math.random() * list.length);
+    } while (i2 === i1);
 
-  const list = templist[index];
-  if (!list || list.length < 2) {
-    console.warn('Not enough words of length', len);
-    return;
-  }
+    word1 = list[i1];
+    word2 = list[i2];
 
-  const i1 = Math.floor(Math.random() * list.length);
-  let i2;
-  do {
-    i2 = Math.floor(Math.random() * list.length);
-  } while (i2 === i1);
+    if (restrictedWords.includes(word1) || restrictedWords.includes(word2)) continue;
 
-  if (restrictedWords.includes(list[i1]) || restrictedWords.includes(list[i2])) {
+    const altgroups = await getLegalAnswers();
+    const wordList = altgroups[len];
+    let index1 = wordList.indexOf(word1);
+    let index2 = wordList.indexOf(word2);
+
+    exists = await existsWordChainByIndex(index1, index2, potentialunused, len, minLen);
+    tries++;
+    if (exists.length) break;
+  } while ((!exists || !exists.length) && tries < maxTries);
+
+  if (!exists || !exists.length) {
     return {"start": "", "target": "", "chain": []};
   }
 
-  // existsWordChainByIndex is async, so we need to await its result
-  // pickWords must be async to use await
-  // If a chain exists, we want to try again
-  // So, change pickWords to async and use await here
-  // Example:
-  // if (await existsWordChainByIndex(i1, i2, potentialunused, len)) {
-  //   return await pickWords(groups, len, potentialunused); // try again
-  // }
-
-  // Note: You must update the pickWords function definition to be async:
-  // async function pickWords(groups, len, potentialunused) { ... }
-  word1 = list[i1];
-  word2 = list[i2];
-
-  const resWords = await fetch('legalanswers.json');
-  const altgroups = await resWords.json();
-  const wordList = altgroups[len];
-
-  let index1 = wordList.indexOf(word1);
-  let index2 = wordList.indexOf(word2);
-
-  const exists = await existsWordChainByIndex(index1, index2, potentialunused, len, minLen);
-  if (!exists.length) {
-    return {"start": "", "target": "", "chain": []};
-  }
-
-  word1 = list[i1];
-  word2 = list[i2];
   console.log(`Chosen words:`, word1, word2);
   return {"start": word1, "target": word2, "chain": exists};
 }
 
-async function createLevels()
-{
+async function createLevels() {
   currentLevelIndex = 0;
   currentStage = 0;
-  currentTotalStage = 0; //
-  totalStages = 0; //
-  LevelsCompleted = 0; //
+  currentTotalStage = 0;
+  totalStages = 0;
+  LevelsCompleted = 0;
   restrictedWords = [];
   wordsused = {3:[], 4:[], 5:[]};
   potentialunused = {3:[], 4:[], 5:[]};
@@ -682,17 +692,22 @@ async function createLevels()
   const groups = await res.json();
   levels = [];
   let i, done = 0;
-  for (const lvl of levelconstraints)
-  {
+  for (const lvl of levelconstraints) {
     i = lvl.level;
     let words = [];
     let res;
-    for (let j = 0; j < lvl.stages.length; j++)
-    {
+    for (let j = 0; j < lvl.stages.length; j++) {
       const stageLen = lvl.stages[j];
-      do {
+      res = await pickWords(groups, stageLen, potentialunused[stageLen], minimumLength[i-1].stages[j] + 1);
+      let tries = 0;
+      while (!res.chain.length && tries < 20) {
         res = await pickWords(groups, stageLen, potentialunused[stageLen], minimumLength[i-1].stages[j] + 1);
-      } while (!res.chain.length);
+        tries++;
+      }
+      if (!res.chain.length) {
+        console.warn(`Could not find valid chain for level ${i} stage ${j + 1}`);
+        continue;
+      }
       restrictedWords.push(res.start);
       restrictedWords.push(res.target);
       for (const w of res.chain) potentialunused[stageLen].push(w);
