@@ -992,12 +992,6 @@ async function loadGameState() {
     currentTyped = '';
     lengthOfWord = current.length;
     nextBtn.disabled = startEl.value !== targetEl.value && startEl.value !== '';
-    renderHistory();
-    renderInventory();
-    renderProgress();
-    updateAllBoxes();
-    setMsg('');
-    renderUsedWords();
     originalOrder = Array.from(wordsUsedEl.children);
     for (const key in levels) {
       for (const words in levels[key].words) {
@@ -1018,6 +1012,12 @@ async function loadGameState() {
         updateAllBoxes();
       }
     }
+    renderHistory();
+    renderInventory();
+    renderProgress();
+    updateAllBoxes();
+    setMsg('');
+    renderUsedWords();
     return true;
   }
   catch (err) {
